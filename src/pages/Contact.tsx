@@ -24,20 +24,31 @@ const ContactPage = () => {
     setIsSubmitting(true);
     try {
       console.log("Envoi du formulaire avec les données:", formData);
-      const {
-        data,
-        error
-      } = await supabase.functions.invoke('send-contact-email', {
-        body: formData
-      });
+      
+      // Enregistrer directement dans la base de données
+      const { data, error } = await supabase
+        .from('contacts')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            subject: formData.service || 'Demande de contact',
+            message: formData.message
+          }
+        ])
+        .select();
+      
       if (error) {
-        console.error("Erreur lors de l'envoi:", error);
+        console.error("Erreur lors de l'enregistrement:", error);
         throw error;
       }
-      console.log("Réponse de la fonction:", data);
+      
+      console.log("Message enregistré:", data);
+      
       toast({
         title: "Message envoyé ! ✅",
-        description: "Nous vous répondrons dans les plus brefs délais. Un email de confirmation vous a été envoyé."
+        description: "Nous avons bien reçu votre demande. Nous vous répondrons dans les plus brefs délais."
       });
 
       // Réinitialiser le formulaire
