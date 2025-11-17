@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { trackConversion } from "@/hooks/useAnalytics";
 const ContactPage = () => {
   const {
     toast
@@ -46,6 +47,11 @@ const ContactPage = () => {
       
       console.log("Message enregistré:", data);
       
+      // 🎯 TRACKER LA CONVERSION
+      if (data && data[0]) {
+        await trackConversion('contact-form', data[0].id);
+      }
+      
       toast({
         title: "Message envoyé ! ✅",
         description: "Nous avons bien reçu votre demande. Nous vous répondrons dans les plus brefs délais."
@@ -78,12 +84,18 @@ const ContactPage = () => {
     }));
   };
   const handleWhatsApp = () => {
-    const phoneNumber = "33123456789";
-    const message = encodeURIComponent("Bonjour, je souhaite obtenir un devis pour vos services.");
+    // Tracker la conversion WhatsApp
+    trackConversion('whatsapp');
+    
+    const phoneNumber = "33667623292"; // Ton vrai numéro
+    const message = encodeURIComponent("Bonjour, je souhaite obtenir un devis pour vos services NovyTek.");
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
   };
   const handleEmail = () => {
-    window.location.href = "mailto:contact@novytek.fr?subject=Demande de devis";
+    // Tracker la conversion Email
+    trackConversion('email');
+    
+    window.location.href = "mailto:nahmematthieu@gmail.com?subject=Demande de devis NovyTek";
   };
   return <div className="min-h-screen pt-24 pb-16">
       {/* Hero */}
