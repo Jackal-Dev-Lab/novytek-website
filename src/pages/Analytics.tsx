@@ -1,20 +1,31 @@
 // src/pages/Analytics.tsx
-// Tableau de bord des statistiques (protégé par mot de passe)
+// Tableau de bord des statistiques (protégé par authentification)
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { LogOut, Shield, User } from 'lucide-react';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
 const Analytics = () => {
+  const navigate = useNavigate();
+  const { admin, signOut, isSuperAdmin } = useAuth();
   const [stats, setStats] = useState<any>(null);
   const [visitsBySource, setVisitsBySource] = useState<any[]>([]);
   const [visitsByDay, setVisitsByDay] = useState<any[]>([]);
   const [conversionRates, setConversionRates] = useState<any[]>([]);
   const [topPages, setTopPages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/login');
+  };
 
   useEffect(() => {
     loadAnalytics();
@@ -91,7 +102,37 @@ const Analytics = () => {
   return (
     <div className="min-h-screen pt-24 pb-16 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-8">Tableau de bord Analytics</h1>
+        {/* Header avec info utilisateur */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold">Tableau de bord Analytics</h1>
+            <p className="text-gray-600 mt-2">Bienvenue, {admin?.full_name || admin?.email}</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-sm bg-white px-4 py-2 rounded-lg shadow">
+              {isSuperAdmin ? (
+                <>
+                  <Shield className="h-4 w-4 text-purple-600" />
+                  <span className="font-medium text-purple-600">Super Admin</span>
+                </>
+              ) : (
+                <>
+                  <User className="h-4 w-4 text-blue-600" />
+                  <span className="font-medium text-blue-600">Admin</span>
+                </>
+              )}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSignOut}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Déconnexion
+            </Button>
+          </div>
+        </div>
 
         {/* Statistiques générales */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
