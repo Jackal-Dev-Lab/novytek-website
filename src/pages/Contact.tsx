@@ -21,72 +21,62 @@ const ContactPage = () => {
     message: ""
   });
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setIsSubmitting(true);
-  
-  console.log("📝 Données formulaire:", formData);
-  
-  try {
-    console.log("⏳ Envoi vers Supabase...");
-    
-    const insertData = {
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone || null,
-      subject: formData.service || 'Demande de contact',
-      message: formData.message
-    };
-    
-    console.log("📤 Données à insérer:", insertData);
-    
-    const { data, error } = await supabase
-      .from('contacts')
-      .insert([insertData])
-      .select();
-    
-    console.log("📥 Réponse Supabase:");
-    console.log("  - Data:", data);
-    console.log("  - Error:", error);
-    
-    if (error) {
-      console.error("❌ Erreur Supabase:", error);
-      throw error;
-    }
-    
-    console.log("✅ Message enregistré:", data);
-    
-    // Tracker la conversion
-    if (data && data[0]) {
-      await trackConversion('contact-form', data[0].id);
-    }
-    
-    toast({
-      title: "Message envoyé ! ✅",
-      description: "Nous avons bien reçu votre demande."
-    });
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      console.log("Envoi du formulaire avec les données:", formData);
+      
+      // Enregistrer directement dans la base de données
+      const { data, error } = await supabase
+        .from('contacts')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            subject: formData.service || 'Demande de contact',
+            message: formData.message
+          }
+        ])
+        .select();
+      
+      if (error) {
+        console.error("Erreur lors de l'enregistrement:", error);
+        throw error;
+      }
+      
+      console.log("Message enregistré:", data);
+      
+      // 🎯 TRACKER LA CONVERSION
+      if (data && data[0]) {
+        await trackConversion('contact-form', data[0].id);
+      }
+      
+      toast({
+        title: "Message envoyé ! ✅",
+        description: "Nous avons bien reçu votre demande. Nous vous répondrons dans les plus brefs délais."
+      });
 
-    // Réinitialiser
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      service: "",
-      message: ""
-    });
-    (e.target as HTMLFormElement).reset();
-    
-  } catch (error: any) {
-    console.error("💥 ERREUR COMPLÈTE:", error);
-    
-    toast({
-      title: "Erreur",
-      description: error.message || "Impossible d'envoyer le message",
-      variant: "destructive"
-    });
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+      // Réinitialiser le formulaire
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        service: "",
+        message: ""
+      });
+      (e.target as HTMLFormElement).reset();
+    } catch (error: any) {
+      console.error("Erreur complète:", error);
+      toast({
+        title: "Erreur lors de l'envoi",
+        description: error.message || "Une erreur est survenue. Veuillez réessayer.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,

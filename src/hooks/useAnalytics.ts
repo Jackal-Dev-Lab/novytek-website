@@ -1,8 +1,10 @@
-// src/hooks/useAnalytics.ts - VERSION AVANCÉE
-import { useEffect, useRef, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useLocation } from 'react-router-dom';
+// src/hooks/useAnalytics.ts
+// Hook pour tracker les visites et conversions
 
+import { useEffect, useRef } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+
+// Générer un session ID unique pour chaque visite
 const getSessionId = (): string => {
   let sessionId = sessionStorage.getItem('session_id');
   if (!sessionId) {
@@ -12,6 +14,7 @@ const getSessionId = (): string => {
   return sessionId;
 };
 
+// Détecter le type d'appareil
 const getDeviceType = (): string => {
   const width = window.innerWidth;
   if (width < 768) return 'mobile';
@@ -19,6 +22,7 @@ const getDeviceType = (): string => {
   return 'desktop';
 };
 
+// Extraire le navigateur du user agent
 const getBrowser = (): string => {
   const ua = navigator.userAgent;
   if (ua.includes('Chrome')) return 'Chrome';
@@ -28,6 +32,7 @@ const getBrowser = (): string => {
   return 'Other';
 };
 
+// Extraire l'OS du user agent
 const getOS = (): string => {
   const ua = navigator.userAgent;
   if (ua.includes('Windows')) return 'Windows';
@@ -38,75 +43,53 @@ const getOS = (): string => {
   return 'Other';
 };
 
+// Extraire la source depuis l'URL
 const getSource = (): string => {
   const params = new URLSearchParams(window.location.search);
+  
+  // Vérifier les paramètres UTM
   const utmSource = params.get('utm_source');
   if (utmSource) return utmSource;
+  
+  // Vérifier le paramètre source personnalisé
   const source = params.get('source');
   if (source) return source;
+  
+  // Vérifier le referrer
   const referrer = document.referrer;
   if (referrer) {
     if (referrer.includes('google')) return 'google';
     if (referrer.includes('facebook')) return 'facebook';
     if (referrer.includes('instagram')) return 'instagram';
+    if (referrer.includes('linkedin')) return 'linkedin';
+    if (referrer.includes('twitter')) return 'twitter';
     return 'referral';
   }
+  
   return 'direct';
 };
 
-// Tracker un événement
-export const trackEvent = async (
-  eventType: string,
-  eventName: string,
-  metadata?: any
-) => {
-  try {
-    const visitId = sessionStorage.getItem('visit_id');
-    const sessionId = getSessionId();
-
-    await supabase.from('events').insert([{
-      visit_id: visitId,
-      session_id: sessionId,
-      event_type: eventType,
-      event_name: eventName,
-      page_url: window.location.href,
-      time_from_load: Date.now() - (window.performance?.timing?.navigationStart || 0),
-      metadata: metadata || null,
-    }]);
-  } catch (error) {
-    console.error('Erreur trackEvent:', error);
-  }
-};
-
-// Tracker une page vue
+// Tracker une visite
 export const trackPageView = async () => {
   try {
     const params = new URLSearchParams(window.location.search);
-    const width = window.innerWidth;
-
+    
     const visitData = {
+      ip_address: null, // Sera rempli côté serveur si besoin
       user_agent: navigator.userAgent,
       source: getSource(),
       referrer: document.referrer || null,
       utm_source: params.get('utm_source'),
       utm_medium: params.get('utm_medium'),
       utm_campaign: params.get('utm_campaign'),
-      utm_content: params.get('utm_content'),
-      utm_term: params.get('utm_term'),
-      gclid: params.get('gclid'),
-      fbclid: params.get('fbclid'),
       page_url: window.location.href,
       page_title: document.title,
       device_type: getDeviceType(),
       browser: getBrowser(),
       os: getOS(),
-      screen_width: width,
+      screen_width: window.innerWidth,
       screen_height: window.innerHeight,
-      is_mobile: width < 768,
-      is_tablet: width >= 768 && width < 1024,
-      language: navigator.language,
       session_id: getSessionId(),
-      page_load_time: window.performance?.timing?.loadEventEnd - window.performance?.timing?.navigationStart,
     };
 
     const { data, error } = await supabase
@@ -115,12 +98,13 @@ export const trackPageView = async () => {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Erreur tracking:', error);
+      return null;
+    }
 
+    // Stocker l'ID de visite pour les conversions
     sessionStorage.setItem('visit_id', data.id);
-    
-    // Tracker l'événement de page view
-    trackEvent('pageview', `view_${document.title}`);
     
     return data.id;
   } catch (error) {
@@ -129,18 +113,27 @@ export const trackPageView = async () => {
   }
 };
 
-// Mettre à jour l'engagement
-export const updateEngagement = async (updates: any) => {
+// Mettre à jour le temps passé sur la page
+export const updateTimeOnPage = async (visitId: string, timeInSeconds: number) => {
   try {
-    const visitId = sessionStorage.getItem('visit_id');
-    if (!visitId) return;
-
     await supabase
       .from('visits')
-      .update(updates)
+      .update({ time_on_page: timeInSeconds })
       .eq('id', visitId);
   } catch (error) {
-    console.error('Erreur updateEngagement:', error);
+    console.error('Erreur updateTimeOnPage:', error);
+  }
+};
+
+// Mettre à jour le scroll depth
+export const updateScrollDepth = async (visitId: string, scrollPercent: number) => {
+  try {
+    await supabase
+      .from('visits')
+      .update({ scroll_depth: scrollPercent })
+      .eq('id', visitId);
+  } catch (error) {
+    console.error('Erreur updateScrollDepth:', error);
   }
 };
 
@@ -152,112 +145,86 @@ export const trackConversion = async (
   try {
     const visitId = sessionStorage.getItem('visit_id');
     const firstSource = sessionStorage.getItem('first_source') || getSource();
-
+    
+    // Sauvegarder la première source (attribution first-touch)
     if (!sessionStorage.getItem('first_source')) {
       sessionStorage.setItem('first_source', firstSource);
     }
 
-    // Mettre à jour la visite
-    const updateField = type === 'contact-form' ? 'started_contact_form' :
-                       type === 'whatsapp' ? 'clicked_whatsapp' :
-                       type === 'phone' ? 'clicked_phone' : 'clicked_email';
-    
-    await updateEngagement({ [updateField]: true });
-
-    // Créer la conversion
-    await supabase.from('conversions').insert([{
+    const conversionData = {
       visit_id: visitId,
       contact_id: contactId,
       conversion_type: type,
       original_source: firstSource,
-    }]);
+    };
 
-    // Tracker l'événement
-    trackEvent('conversion', type, { source: firstSource });
+    const { error } = await supabase
+      .from('conversions')
+      .insert([conversionData]);
+
+    if (error) {
+      console.error('Erreur trackConversion:', error);
+    }
   } catch (error) {
     console.error('Erreur trackConversion:', error);
   }
 };
 
-// Hook principal
+// Hook principal pour tracker automatiquement
 export const useAnalytics = () => {
-  const location = useLocation();
   const visitIdRef = useRef<string | null>(null);
   const startTimeRef = useRef<number>(Date.now());
   const maxScrollRef = useRef<number>(0);
-  const clickCountRef = useRef<number>(0);
-  const [hasTracked, setHasTracked] = useState(false);
 
   useEffect(() => {
-    // Tracker au chargement initial
-    if (!hasTracked) {
-      trackPageView().then((id) => {
-        if (id) visitIdRef.current = id;
-      });
-      setHasTracked(true);
-    }
-
-    // Tracker le changement de page
-    const page = location.pathname;
-    if (page.includes('/services')) {
-      updateEngagement({ viewed_services: true });
-    } else if (page.includes('/contact')) {
-      updateEngagement({ viewed_contact: true });
-    }
-
-    // Tracker les clics
-    const handleClick = () => {
-      clickCountRef.current++;
-      updateEngagement({ clicks_count: clickCountRef.current });
-      trackEvent('click', 'page_click');
-    };
+    // Tracker la page view au montage
+    trackPageView().then((id) => {
+      if (id) {
+        visitIdRef.current = id;
+      }
+    });
 
     // Tracker le scroll
     const handleScroll = () => {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       const scrollTop = window.scrollY;
-      const scrollPercent = Math.round(((scrollTop + windowHeight) / documentHeight) * 100);
+      const scrollPercent = Math.round(
+        ((scrollTop + windowHeight) / documentHeight) * 100
+      );
       
       if (scrollPercent > maxScrollRef.current) {
         maxScrollRef.current = scrollPercent;
-        updateEngagement({ scroll_depth: scrollPercent });
-        
-        // Tracker les jalons de scroll
-        if ([25, 50, 75, 100].includes(scrollPercent)) {
-          trackEvent('scroll', `scroll_${scrollPercent}`, { page: location.pathname });
+        if (visitIdRef.current) {
+          updateScrollDepth(visitIdRef.current, scrollPercent);
         }
       }
     };
 
-    // Interval pour le temps passé
+    // Mettre à jour le temps passé toutes les 10 secondes
     const timeInterval = setInterval(() => {
       if (visitIdRef.current) {
         const timeSpent = Math.round((Date.now() - startTimeRef.current) / 1000);
-        updateEngagement({ time_on_page: timeSpent });
+        updateTimeOnPage(visitIdRef.current, timeSpent);
       }
     }, 10000);
 
-    document.addEventListener('click', handleClick);
     window.addEventListener('scroll', handleScroll);
 
+    // Cleanup
     return () => {
-      document.removeEventListener('click', handleClick);
       window.removeEventListener('scroll', handleScroll);
       clearInterval(timeInterval);
       
+      // Dernier update avant de partir
       if (visitIdRef.current) {
         const timeSpent = Math.round((Date.now() - startTimeRef.current) / 1000);
-        updateEngagement({ 
-          time_on_page: timeSpent,
-          exit_page: location.pathname,
-          bounced: timeSpent < 5 && clickCountRef.current < 2
-        });
+        updateTimeOnPage(visitIdRef.current, timeSpent);
       }
     };
-  }, [location, hasTracked]);
+  }, []);
 
-  return { trackConversion, trackEvent };
+  return { trackConversion };
 };
 
 export default useAnalytics;
