@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>NovyTek Promo 16:9</title>
+<link href="fonts.css" rel="stylesheet">
+<style>
+  /* Identité relevée sur https://novytek.fr */
+  :root {
+    --bg: #08132b;
+    --bg-2: #0a1734;
+    --line: #1b304c;
+    --blue: #1b8ce3;
+    --sky: #7cc6fb;
+    --text: #eef4fb;
+    --muted: #9fb3cc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+  body { font-family: "Figtree", sans-serif; color: var(--text); }
+  h1, h2, .brand, .price, .big { font-family: "Bricolage Grotesque", sans-serif; }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+  .abs { position: absolute; }
+  .scene { position: absolute; inset: 0; }
+  .eyebrow { font-size: 26px; font-weight: 700; letter-spacing: 6px; color: var(--sky); text-transform: uppercase; }
+
+  /* Fond : bandes horizontales bleues façon site + halo */
+  .stripe { position: absolute; left: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(27,140,227,.55), transparent); }
+  #halo { position: absolute; width: 1100px; height: 1100px; border-radius: 50%; background: radial-gradient(circle, rgba(27,140,227,.28), transparent 65%); }
+
+  /* Scène 1 : logo */
+  #brand { display: flex; align-items: center; gap: 34px; }
+  #brand .word { font-size: 124px; font-weight: 800; letter-spacing: -3px; }
+
+  /* Scène 2 : titre mot à mot */
+  #h1 { left: 160px; right: 160px; top: 330px; font-size: 124px; line-height: 1.02; font-weight: 800; letter-spacing: -3px; }
+  #h1 .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 12px; }
+  #h1 .w > span { display: inline-block; }
+  #h1 .hl { color: var(--sky); }
+  #sub { left: 160px; right: 160px; top: 800px; font-size: 42px; line-height: 1.35; color: var(--muted); font-weight: 500; }
+  #sub b { color: var(--text); font-weight: 700; }
+
+  /* Scène 3 : éditeur */
+  #s3title { left: 120px; width: 1050px; top: 170px; font-size: 76px; line-height: 1.02; font-weight: 800; letter-spacing: -2px; }
+  #panel { left: 120px; top: 410px; width: 380px; }
+  .sec { height: 78px; display: flex; align-items: center; gap: 18px; padding: 0 22px; border-radius: 16px; font-size: 32px; font-weight: 600; color: var(--muted); margin-bottom: 12px; border: 2px solid transparent; }
+  .sec i { font-style: normal; font-size: 22px; font-weight: 700; color: var(--sky); opacity: .8; width: 34px; }
+  #phone { left: 1260px; top: 60px; width: 520px; height: 960px; border-radius: 56px; background: #fff; border: 12px solid #16233f; overflow: hidden; box-shadow: 0 40px 120px -30px rgba(27,140,227,.6); }
+  .blk { position: absolute; left: 22px; right: 22px; border-radius: 20px; overflow: hidden; }
+  #swatches { left: 620px; top: 560px; display: flex; gap: 22px; }
+  .sw { width: 78px; height: 78px; border-radius: 22px; border: 4px solid transparent; }
+  #combo { left: 620px; top: 690px; }
+  #combo .big { font-size: 110px; font-weight: 800; letter-spacing: -3px; line-height: 1; }
+  #combo span { font-size: 34px; color: var(--muted); font-weight: 600; }
+
+  /* Scène 4 : formules */
+  #s4title { left: 0; right: 0; top: 150px; text-align: center; font-size: 96px; font-weight: 800; letter-spacing: -2px; }
+  .plan { position: absolute; top: 320px; width: 520px; height: 380px; border-radius: 34px; background: var(--bg-2); border: 2px solid var(--line); padding: 44px 48px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; }
+  .plan h2 { font-size: 58px; font-weight: 800; }
+  .plan p { font-size: 28px; color: var(--muted); margin-top: 12px; max-width: 420px; line-height: 1.25; }
+  .plan .price { font-size: 96px; font-weight: 800; letter-spacing: -2px; white-space: nowrap; }
+  .plan .price small { font-family: "Figtree"; font-size: 30px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+  .plan.pop { background: linear-gradient(135deg, #0f3a73, #0b2451); border-color: var(--blue); }
+  .badge { position: absolute; top: -24px; right: 46px; background: var(--blue); color: #fff; font-size: 26px; font-weight: 700; padding: 10px 24px; border-radius: 999px; }
+  #chips { left: 160px; right: 160px; top: 800px; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+  .chip { display: inline-flex; align-items: center; gap: 14px; padding: 18px 30px; border-radius: 999px; border: 2px solid var(--line); background: rgba(10,23,52,.8); font-size: 30px; font-weight: 600; }
+  .chip svg { flex: none; }
+
+  /* Scène 5 : appel à l'action */
+  #cta { left: 0; right: 0; top: 570px; text-align: center; }
+  .btn { display: inline-flex; align-items: center; gap: 18px; padding: 38px 64px; border-radius: 26px; background: var(--blue); color: #fff; font-size: 52px; font-weight: 700; box-shadow: 0 30px 60px -24px rgba(27,140,227,.9); }
+  #url { left: 0; right: 0; top: 790px; text-align: center; font-size: 64px; font-weight: 800; }
+  #fine { left: 0; right: 0; top: 890px; text-align: center; font-size: 34px; color: var(--muted); font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="halo"></div>
+  <div id="stripes"></div>
+
+  <!-- Logo (SVG exact de l'en-tête du site) : utilisé en scène 1 et 5 -->
+  <div class="abs" id="brandWrap" style="left:0;right:0;display:flex;justify-content:center;">
+    <div id="brand">
+      <svg id="mark" width="190" height="190" viewBox="0 0 34 34">
+        <rect id="markBg" width="34" height="34" rx="10" fill="#1b8ce3"/>
+        <path id="markN" d="M10 24V10l14 14V10" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="100" stroke-dasharray="100"/>
+      </svg>
+      <div class="word brand" id="word" style="overflow:hidden;white-space:nowrap;"><span id="wordIn" style="display:inline-block">novytek</span></div>
+    </div>
+  </div>
+
+  <!-- Scène 2 -->
+  <div class="scene" id="s2">
+    <div class="abs eyebrow" id="s2eye" style="left:160px;top:260px;">Votre site web, à vous</div>
+    <h1 class="abs" id="h1"></h1>
+    <div class="abs" id="sub">À partir de <b>19 € par mois</b>, hébergement compris.</div>
+  </div>
+
+  <!-- Scène 3 -->
+  <div class="scene" id="s3">
+    <div class="abs eyebrow" id="s3eye" style="left:120px;top:110px;">Vous le composez</div>
+    <h2 class="abs" id="s3title">Section par section,<br><span style="color:var(--sky)">sans une ligne de code.</span></h2>
+    <div class="abs" id="panel"></div>
+    <div class="abs" id="phone"></div>
+    <div class="abs" id="swatches"></div>
+    <div class="abs" id="combo"><div class="big">2 592</div><span>combinaisons de départ</span></div>
+  </div>
+
+  <!-- Scène 4 -->
+  <div class="scene" id="s4">
+    <div class="abs eyebrow" id="s4eye" style="left:0;right:0;top:95px;text-align:center;">Formules</div>
+    <h2 class="abs" id="s4title">Sans frais de création.</h2>
+    <div id="plans"></div>
+    <div class="abs" id="chips"></div>
+  </div>
+
+  <!-- Scène 5 -->
+  <div class="scene" id="s5">
+    <div class="abs" id="cta"><span class="btn">Composer mon site →</span></div>
+    <div class="abs brand" id="url">novytek.fr</div>
+    <div class="abs" id="fine">Sans engagement · Hébergé en France</div>
+  </div>
+
+  <!-- Balayage de transition -->
+  <div class="abs" id="sweep" style="left:0;width:1920px;background:var(--blue);"></div>
+</div>
+
+<script>
+const W = 1920, H = 1080;
+const $ = id => document.getElementById(id);
+
+// ----- Fond : bandes -----
+const STRIPES = [[90, 0.9], [240, 0.6], [410, 1.1], [560, 0.7], [760, 1.0], [930, 0.8], [1030, 0.5]];
+STRIPES.forEach(([y], i) => { const d = document.createElement("div"); d.className = "stripe"; d.id = "st" + i; d.style.top = y + "px"; d.style.width = "1400px"; $("stripes").appendChild(d); });
+
+// ----- Scène 2 : titre du site, mot à mot -----
+const WORDS = ["Le", "site", "de", "votre", "entreprise,", "que", "vous", "tenez", "vous-même."];
+$("h1").innerHTML = WORDS.map((w, i) => `<span class="w"><span id="w${i}" class="${i >= 7 ? "hl" : ""}">${w}</span></span>`).join(" ");
+
+// ----- Scène 3 : sections (liste du site) + maquette -----
+const SECTIONS = ["Bannière", "Horaires", "Avis clients", "Galerie", "Boutique", "Carte de fidélité"];
+$("panel").innerHTML = SECTIONS.map((s, i) => `<div class="sec" id="sec${i}"><i>0${i + 1}</i>${s}</div>`).join("");
+// Blocs de la maquette : [top, height, contenu]
+const BLOCKS = [
+  [22, 300, `<div class="acc" style="position:absolute;inset:0"></div><div style="position:absolute;left:30px;top:120px;width:300px;height:28px;border-radius:8px;background:rgba(255,255,255,.95)"></div><div style="position:absolute;left:30px;top:166px;width:210px;height:28px;border-radius:8px;background:rgba(255,255,255,.95)"></div><div style="position:absolute;left:30px;top:226px;width:150px;height:46px;border-radius:12px;background:#fff"></div>`],
+  [338, 96, `<div style="position:absolute;inset:0;background:#eef2f7"></div><div class="acc" style="position:absolute;left:24px;top:30px;width:36px;height:36px;border-radius:10px"></div><div style="position:absolute;left:80px;top:28px;width:220px;height:16px;border-radius:6px;background:#9aa6b8"></div><div style="position:absolute;left:80px;top:54px;width:160px;height:14px;border-radius:6px;background:#c5cdd8"></div>`],
+  [450, 120, `<div style="position:absolute;inset:0;background:#eef2f7"></div>${[0, 1, 2].map(k => `<div style="position:absolute;left:${24 + k * 34}px;top:26px;width:26px;height:26px;border-radius:50%" class="acc"></div>`).join("")}<div style="position:absolute;left:24px;top:70px;width:380px;height:14px;border-radius:6px;background:#9aa6b8"></div><div style="position:absolute;left:24px;top:94px;width:280px;height:14px;border-radius:6px;background:#c5cdd8"></div>`],
+  [586, 150, [0, 1, 2].map(k => `<div style="position:absolute;left:${k * 150}px;top:0;width:140px;height:150px;border-radius:14px;background:${["#cfd8e3", "#b8c4d3", "#dde4ec"][k]}"></div>`).join("")],
+  [752, 96, `<div style="position:absolute;inset:0;background:#eef2f7"></div><div style="position:absolute;left:24px;top:24px;width:48px;height:48px;border-radius:12px;background:#c5cdd8"></div><div style="position:absolute;left:90px;top:30px;width:170px;height:16px;border-radius:6px;background:#9aa6b8"></div><div class="acc" style="position:absolute;right:24px;top:26px;width:110px;height:44px;border-radius:12px"></div>`],
+  [864, 60, `<div class="acc" style="position:absolute;inset:0;opacity:.18"></div>${[0, 1, 2, 3, 4, 5, 6, 7].map(k => `<div class="acc" style="position:absolute;left:${24 + k * 50}px;top:16px;width:28px;height:28px;border-radius:50%;opacity:${k < 5 ? 1 : .3}"></div>`).join("")}`],
+];
+$("phone").innerHTML = BLOCKS.map(([top, h, html], i) => `<div class="blk" id="blk${i}" style="top:${top}px;height:${h}px">${html}</div>`).join("");
+// Couleurs des pastilles affichées sur le site (section « À votre image »)
+const SW = ["#e8651f", "#3f8a5a", "#1b8ce3", "#8e44ad", "#e0a100"];
+$("swatches").innerHTML = SW.map((c, i) => `<div class="sw" id="sw${i}" style="background:${c}"></div>`).join("");
+
+// ----- Scène 4 : formules (novytek.fr/formules) -----
+const PLANS = [
+  ["Vitrine", "Tout pour présenter votre activité et être trouvé.", "19 €", false],
+  ["Boutique", "Tout de la Vitrine, plus la vente en ligne.", "29 €", true],
+  ["Personnalisé", "Votre site conçu à la main, de A&nbsp;à&nbsp;Z.", "69 €", false],
+];
+$("plans").innerHTML = PLANS.map(([n, d, p, pop], i) =>
+  `<div class="plan${pop ? " pop" : ""}" id="plan${i}" style="left:${130 + i * 570}px">${pop ? '<div class="badge">Le plus choisi</div>' : ""}<div><h2>${n}</h2><p>${d}</p></div><div class="price">${p}<small> /mois</small></div></div>`).join("");
+const check = `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#7cc6fb" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>`;
+const CHIPS = ["Certificat HTTPS", "Hébergé en France", "Sauvegardes chiffrées", "Mises à jour", "Aucun cookie publicitaire"];
+$("chips").innerHTML = CHIPS.map((c, i) => `<span class="chip" id="chip${i}">${check}${c}</span>`).join("");
+
+// ----- Outils -----
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const p = (t, a, b) => clamp((t - a) / (b - a));
+const eOut = x => 1 - Math.pow(1 - x, 3);
+const eIn = x => x * x * x;
+const eIO = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const eBack = x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+const st = (el, o) => Object.assign((typeof el === "string" ? $(el) : el).style, o);
+function inOut(el, t, a, b, c, d, { dx = 0, dy = 50, ox = 0, oy = -40, s0 = 1 } = {}) {
+  const i = eOut(p(t, a, b)), o = eIn(p(t, c, d));
+  st(el, { opacity: i * (1 - o), transform: `translate(${lerp(dx, 0, i) + ox * o}px,${lerp(dy, 0, i) + oy * o}px) scale(${lerp(s0, 1, i)})` });
+}
+const hex = h => [1, 3, 5].map(k => parseInt(h.slice(k, k + 2), 16));
+const mix = (a, b, x) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, k) => Math.round(lerp(v, B[k], x))).join(",")})`; };
+
+// ----- Timeline (s) -----
+// 0.0–2.6  Logo : le « N » se trace, « novytek » se révèle
+// 2.4–6.0  Titre du site mot à mot + « À partir de 19 € par mois »
+// 6.0–9.4  Éditeur : sections qui s'empilent, la couleur change
+// 9.4–12.4 Formules 19 / 29 / 69 €/mois + inclus
+// 12.4–15  Logo + « Composer mon site → » + novytek.fr
+const SWEEPS = [2.4, 6.0, 9.4, 12.4];
+
+window.renderFrame = function (t) {
+  // Fond
+  st("halo", { left: (W / 2 - 550 + 160 * Math.sin(t * 0.5)) + "px", top: (0 + 200 * Math.sin(t * 0.33)) + "px" });
+  STRIPES.forEach(([y, sp], i) => st("st" + i, { transform: `translateX(${((t * 260 * sp + i * 370) % 3400) - 1400}px)` }));
+
+  // Balayages de transition (une bande bleue traverse l'écran de bas en haut)
+  let sw = null;
+  for (const s of SWEEPS) if (t >= s - 0.25 && t < s + 0.25) sw = p(t, s - 0.25, s + 0.25);
+  if (sw === null) st("sweep", { display: "none" });
+  else { const k = eIO(sw), top = lerp(H, -H * 0.2, k); st("sweep", { display: "", top: top + "px", height: (H * 0.2 + 260 * Math.sin(Math.PI * k)) + "px", opacity: 1 }); }
+
+  // Logo : scène 1 puis 5
+  const outro = t >= 12.4;
+  const base = outro ? 12.55 : 0.1;
+  const mk = eBack(p(t, base, base + 0.6));
+  const draw = eIO(p(t, base + 0.35, base + 1.05));
+  const wr = eOut(p(t, base + 0.8, base + 1.5));
+  const logoOut = outro ? 0 : eIn(p(t, 2.1, 2.4));
+  const visible = t < 2.4 || outro;
+  st("brandWrap", { display: visible ? "flex" : "none", top: (outro ? 300 : 445) + "px", opacity: 1 - logoOut, transform: `translateY(${-80 * logoOut}px)` });
+  st("mark", { transform: `scale(${mk}) rotate(${lerp(-25, 0, eOut(p(t, base, base + 0.6)))}deg)` });
+  $("markN").setAttribute("stroke-dashoffset", String(100 * (1 - draw)));
+  const fullW = $("wordIn").offsetWidth;
+  st("word", { width: (fullW * wr) + "px", opacity: clamp(wr * 3) });
+  st("wordIn", { transform: `translateX(${lerp(-40, 0, wr)}px)` });
+  st("brand", { gap: (34 * clamp(wr * 4)) + "px" });
+
+  // Scène 2
+  st("s2", { display: t >= 2.4 && t < 6.1 ? "" : "none" });
+  inOut($("s2eye"), t, 2.55, 2.9, 5.65, 5.95, { dy: 30 });
+  WORDS.forEach((_, i) => {
+    const a = 2.6 + i * 0.13, k = eOut(p(t, a, a + 0.45)), o = eIn(p(t, 5.6 + i * 0.02, 5.9 + i * 0.02));
+    st("w" + i, { transform: `translateY(${lerp(110, 0, k) - 110 * o}%)` });
+  });
+  inOut($("sub"), t, 4.0, 4.5, 5.65, 5.95, { dy: 40 });
+
+  // Scène 3
+  st("s3", { display: t >= 6.0 && t < 9.5 ? "" : "none" });
+  inOut($("s3eye"), t, 6.1, 6.45, 9.0, 9.3, { dy: 30 });
+  inOut($("s3title"), t, 6.15, 6.6, 9.0, 9.3, { dy: 50 });
+  inOut($("phone"), t, 6.3, 6.9, 9.0, 9.35, { dy: 200, oy: 120 });
+  SECTIONS.forEach((_, i) => {
+    const a = 6.6 + i * 0.27;
+    inOut($("sec" + i), t, a - 0.15, a + 0.2, 9.0 + i * 0.02, 9.3, { dx: -60, dy: 0, oy: 0, ox: -60 });
+    const act = t >= a && t < a + 0.3;
+    st("sec" + i, { background: act ? "rgba(27,140,227,.22)" : "transparent", borderColor: act ? "#1b8ce3" : "transparent", color: t >= a ? "#eef4fb" : "#9fb3cc" });
+    const bk = p(t, a, a + 0.4);
+    st("blk" + i, { opacity: clamp(bk * 2), transform: `translateX(${lerp(380, 0, eBack(bk))}px)` });
+  });
+  // Changement de couleur d'accent : bleu -> orange -> vert -> violet -> bleu
+  const seq = [[8.3, 0], [8.6, 1], [8.9, 3]];
+  let acc = "#1b8ce3", selIdx = -1;
+  for (let k = 0; k < seq.length; k++) {
+    const [tk, idx] = seq[k];
+    if (t >= tk) { const prev = k ? SW[seq[k - 1][1]] : "#1b8ce3"; acc = mix(prev, SW[idx], eOut(p(t, tk, tk + 0.2))); selIdx = idx; }
+  }
+  document.querySelectorAll("#phone .acc").forEach(e => e.style.background = acc);
+  SW.forEach((_, i) => {
+    inOut($("sw" + i), t, 8.0 + i * 0.06, 8.3 + i * 0.06, 9.0, 9.3, { dy: 30, s0: 0.5 });
+    st("sw" + i, { borderColor: i === selIdx ? "#fff" : "transparent" });
+  });
+  inOut($("combo"), t, 8.05, 8.45, 9.0, 9.3, { dy: 40 });
+
+  // Scène 4
+  st("s4", { display: t >= 9.4 && t < 12.5 ? "" : "none" });
+  inOut($("s4eye"), t, 9.5, 9.85, 12.0, 12.3, { dy: 30 });
+  inOut($("s4title"), t, 9.55, 10.0, 12.0, 12.3, { dy: 50 });
+  PLANS.forEach((_, i) => {
+    const a = 9.85 + i * 0.22;
+    inOut($("plan" + i), t, a, a + 0.5, 12.0 + i * 0.03, 12.3, { dy: 260, oy: 0, s0: 0.9 });
+  });
+  const pop = $("plan1");
+  if (t > 10.6 && t < 12.0) pop.style.transform += ` scale(${1 + 0.03 * Math.sin((t - 10.6) * 6)})`;
+  CHIPS.forEach((_, i) => inOut($("chip" + i), t, 10.8 + i * 0.12, 11.2 + i * 0.12, 12.0, 12.3, { dy: 30, s0: 0.8 }));
+
+  // Scène 5
+  st("s5", { display: outro ? "" : "none" });
+  inOut($("cta"), t, 13.3, 13.8, 99, 100, { dy: 60, s0: 0.8 });
+  if (t > 13.8) $("cta").style.transform += ` scale(${1 + 0.025 * Math.sin((t - 13.8) * 6)})`;
+  inOut($("url"), t, 13.55, 14.0, 99, 100, { dy: 40 });
+  inOut($("fine"), t, 13.7, 14.15, 99, 100, { dy: 30 });
+};
+window.renderFrame(0);
+</script>
+</body>
+</html>

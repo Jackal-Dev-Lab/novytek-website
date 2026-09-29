@@ -6,8 +6,8 @@ const FPS = 30, DUR = 15;
 const mode = process.argv[2] || 'preview';
 (async () => {
   const browser = await chromium.launch();
-  const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
-  await page.goto('file://' + __dirname + '/promo.html');
+  const page = await browser.newPage({ viewport: { width: +(process.env.VW || 1080), height: +(process.env.VH || 1920) } });
+  await page.goto('file://' + __dirname + '/' + (process.env.PAGE || 'promo.html') + '');
   await page.evaluate(async () => {
     for (const f of ['800 50px "Bricolage Grotesque"', '700 50px "Bricolage Grotesque"', '500 50px Figtree', '600 50px Figtree', '700 50px Figtree'])
       await document.fonts.load(f, 'Aé€');
@@ -23,7 +23,7 @@ const mode = process.argv[2] || 'preview';
     }
   } else {
     const ff = spawn(process.env.FF, ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'png', '-i', '-',
-      '-c:v', 'libx264', '-preset', 'slow', '-crf', '18', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', 'novytek-promo-15s.mp4'], { stdio: ['pipe', 'inherit', 'inherit'] });
+      '-c:v', 'libx264', '-preset', 'slow', '-crf', '18', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', process.env.OUT || 'novytek-promo-15s.mp4'], { stdio: ['pipe', 'inherit', 'inherit'] });
     for (let i = 0; i < FPS * DUR; i++) {
       await page.evaluate(t => renderFrame(t), i / FPS);
       const buf = await page.screenshot({ type: 'png' });
