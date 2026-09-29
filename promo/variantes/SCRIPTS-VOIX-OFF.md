@@ -1,6 +1,6 @@
 # Scripts de voix off : variantes de pub NovyTek
 
-Trois pubs de 15 s au format vertical 1080×1920, dans le même style que la première. Les textes et les tarifs
+Quatre pubs de 15 s au format vertical 1080×1920, dans le même style que la première (la 4e en 3D). Les textes et les tarifs
 sont repris de https://novytek.fr (accueil et /formules).
 
 ## Comment enregistrer
@@ -46,8 +46,18 @@ Pour la pub 3, les phrases 2 à 4 sont très courtes : marquez bien une pause ne
 La mention « Dès le paiement validé · formules Vitrine et Boutique » reste à l'écran, car la formule
 Personnalisé demande 10 à 15 jours ouvrés d'après le site.
 
+## Pub 4 : « 3D »
+
+| # | À l'écran | À dire | Durée cible |
+|---|---|---|---|
+| 1 | Logo 3D en orbite + « Votre site web, à vous. Sans y passer vos soirées. » | « Votre site web… sans y passer vos soirées. » | 3,1 s |
+| 2 | Téléphone 3D : les sections s'emboîtent, la couleur change | « Vous le composez section par section, sans une ligne de code. » | 3,9 s |
+| 3 | Les 3 formules en cartes de verre + « Sans frais de création » | « Dès dix-neuf euros par mois… sans frais de création. » | 3,5 s |
+| 4 | Logo 3D + « Composer mon site → » | « Composez votre site sur novytek.fr. » | 3,1 s |
+
 ## Côté technique
 
+- `pub-3d.html` : version 3D (three.js, fichiers locaux dans `3d/`, licence MIT), rendue en WebGL logiciel.
 - `pub-*.html` : animations (kit commun dans `kit.css` / `kit.js`). Rendu (depuis `promo/`) : `PAGE=variantes/pub-xxx.html OUT=… node render.cjs full`.
 - `cues-*.json` : repères exportés (instants des sons et fenêtres de voix off).
 - `sons.py` : génère le fond sonore d'une pub à partir de ses repères (tout est synthétisé, aucun droit à gérer).
