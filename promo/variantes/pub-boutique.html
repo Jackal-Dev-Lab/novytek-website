@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Pub NovyTek – Boutique</title>
+<link href="../fonts.css" rel="stylesheet">
+<link href="kit.css" rel="stylesheet">
+<style>
+  /* Formule Boutique telle que décrite sur https://novytek.fr/formules */
+  :root { --shop: #e8651f; }
+  body.v #s1i { left: 440px; top: 500px; width: 200px; height: 200px; border-radius: 56px; background: var(--blue); display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 80px -20px rgba(27,140,227,.7); }
+  body.v #s1t { left: 0; right: 0; text-align: center; top: 770px; font-size: 130px; }
+
+  body.v #s2t { left: 80px; top: 300px; font-size: 84px; }
+  body.v #ph { left: 80px; top: 540px; width: 460px; height: 860px; }
+  body.v #feats { left: 580px; top: 590px; width: 440px; }
+  .feat { height: 170px; margin-bottom: 14px; font-size: 38px; font-weight: 700; line-height: 1.15; color: var(--muted); padding: 0 20px; }
+  .feat .ic { width: 76px; height: 76px; }
+  #cartBadge { position: absolute; right: 12px; top: 14px; width: 34px; height: 34px; border-radius: 50%; background: var(--shop); color: #fff; font-size: 20px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .prod { position: absolute; width: 187px; height: 232px; border-radius: 18px; background: #f3f5f8; overflow: hidden; }
+  .prod .img { position: absolute; left: 0; top: 0; right: 0; height: 142px; }
+  .prod .add { position: absolute; right: 10px; top: 170px; width: 48px; height: 48px; border-radius: 50%; background: var(--shop); display: flex; align-items: center; justify-content: center; }
+  #finger { position: absolute; width: 64px; height: 64px; border-radius: 50%; background: rgba(8,19,43,.35); border: 3px solid rgba(255,255,255,.9); pointer-events: none; }
+  #sheet { position: absolute; left: 0; right: 0; bottom: 0; height: 270px; background: #fff; border-radius: 30px 30px 0 0; box-shadow: 0 -20px 50px rgba(8,19,43,.25); }
+  #payBtn { position: absolute; left: 22px; right: 22px; bottom: 26px; height: 72px; border-radius: 18px; background: var(--shop); color: #fff; font-size: 30px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; }
+  #toast { position: absolute; left: 22px; right: 22px; top: 104px; height: 70px; border-radius: 18px; background: #0a1734; color: #fff; font-size: 26px; font-weight: 700; display: flex; align-items: center; gap: 14px; padding: 0 20px; }
+
+  body.v #s3b { top: 430px; }
+  body.v #s3e { top: 520px; }
+  body.v #s3p { top: 580px; font-size: 300px; line-height: 1; font-weight: 800; letter-spacing: -8px; }
+  #s3p small { font-family: "Figtree"; font-size: 64px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+  body.v #s3l { left: 0; right: 0; text-align: center; top: 940px; font-size: 64px; }
+  body.v #s3c { left: 70px; right: 70px; top: 1170px; display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- 1. Accroche -->
+  <div class="scene" id="s1">
+    <div class="abs" id="s1i"></div>
+    <h1 class="abs title" id="s1t"></h1>
+  </div>
+
+  <!-- 2. Ce que comprend la boutique -->
+  <div class="scene" id="s2">
+    <h2 class="abs title" id="s2t"></h2>
+    <div class="phone" id="ph">
+      <div class="sk" style="left:24px;top:34px;width:120px;height:26px;background:var(--shop)"></div>
+      <div class="abs" style="right:30px;top:26px;color:#0a1734" id="cartIc"></div>
+      <div id="cartBadge">0</div>
+      <div class="sk" id="banner" style="left:22px;top:92px;right:22px;height:160px;border-radius:20px;background:var(--shop)">
+        <div class="sk" style="left:26px;top:40px;width:230px;height:24px;background:rgba(255,255,255,.95)"></div>
+        <div class="sk" style="left:26px;top:78px;width:160px;height:24px;background:rgba(255,255,255,.95)"></div>
+        <div class="sk" style="left:26px;top:116px;width:110px;height:24px;border-radius:12px;background:#fff"></div>
+      </div>
+      <div id="prods"></div>
+      <div id="toast"></div>
+      <div id="sheet">
+        <div class="sk" style="left:22px;top:26px;width:140px;height:22px;background:#9aa6b8"></div>
+        <div class="sk" style="left:22px;top:68px;width:52px;height:52px;border-radius:12px;background:#f6d7c3"></div>
+        <div class="sk" style="left:90px;top:80px;width:170px;height:14px;background:#c5cdd8"></div>
+        <div class="sk" style="left:22px;top:130px;width:52px;height:52px;border-radius:12px;background:#d7eadf"></div>
+        <div class="sk" style="left:90px;top:142px;width:130px;height:14px;background:#c5cdd8"></div>
+        <div id="payBtn"><span id="payIc"></span><span id="payTx">Payer</span></div>
+      </div>
+      <div id="finger"></div>
+    </div>
+    <div class="abs" id="feats"></div>
+  </div>
+
+  <!-- 3. Le prix -->
+  <div class="scene" id="s3">
+    <div class="abs center" id="s3b"><span class="badge">Le plus choisi</span></div>
+    <div class="abs eyebrow center" id="s3e">Formule Boutique</div>
+    <div class="abs center big" id="s3p"><span id="s3n">0</span>&nbsp;€<small> /mois</small></div>
+    <h2 class="abs title" id="s3l"></h2>
+    <div class="abs" id="s3c"></div>
+  </div>
+</div>
+
+<script src="icons.js"></script>
+<script src="kit.js"></script>
+<script>
+// ---------- Contenu ----------
+$("s1i").innerHTML = icon("shopping-cart", 120, "#fff", 2.2);
+words("s1t", "Vous voulez\nvendre\n*en ligne ?*");
+words("s2t", "Tout pour vendre\n*en ligne.*");
+words("s3l", "Tout de la Vitrine,\n*plus la vente en ligne.*");
+$("cartIc").innerHTML = icon("shopping-cart", 40, "#0a1734", 2.2);
+// Produits (illustration)
+const PRODS = [["#f6d7c3", 22, 272], ["#d9e7f5", 227, 272], ["#e5dcf3", 22, 520], ["#d7eadf", 227, 520]];
+$("prods").innerHTML = PRODS.map(([c, x, y], i) => `<div class="prod" id="pr${i}" style="left:${x}px;top:${y}px">
+  <div class="img" style="background:${c}"></div>
+  <div class="sk" style="left:14px;top:156px;width:110px;height:14px;background:#9aa6b8"></div>
+  <div class="sk" style="left:14px;top:184px;width:60px;height:24px;border-radius:12px;background:var(--shop);opacity:.85"></div>
+  <div class="add">${icon("plus", 28, "#fff", 3)}</div></div>`).join("");
+$("toast").innerHTML = `${icon("truck", 34, "#7cc6fb", 2.2)}<span>Commande expédiée</span>`;
+// Fonctions de la formule Boutique (novytek.fr/formules)
+const FEATS = [["package", "Catalogue, stock et prix"], ["credit-card", "Panier et paiement Stripe"], ["truck", "Livraisons et expédition"], ["tag", "Codes promo"]];
+$("feats").innerHTML = FEATS.map(([ic, tx], i) => `<div class="row feat" id="f${i}"><div class="ic">${icon(ic, 40, "#7cc6fb", 2.2)}</div><span>${tx}</span></div>`).join("");
+const CHIPS = ["Sans frais de création", "Sans engagement", "Hébergement inclus"];
+$("s3c").innerHTML = CHIPS.map((c, i) => `<span class="chip" id="c3_${i}">${icon("circle-check", 30, "#7cc6fb", 2.6)}${c}</span>`).join("");
+
+// ---------- Timeline (s) ----------
+// 0.0–3.0  « Vous voulez vendre en ligne ? »
+// 3.0–7.6  La boutique en action + ce qu'elle comprend
+// 7.6–11.9 Formule Boutique 29 €/mois
+// 11.9–15  Carton de fin
+setup({
+  sweeps: [3.0, 7.6, 11.9], end: 11.9, cta: "Choisir Boutique",
+  pad: [["C3", "C4", "E4", "G4", "D5"], ["G2", "G3", "B3", "D4", "A4"], ["A2", "A3", "C4", "E4", "G4"], ["F2", "F3", "A3", "C4", "E4"]],
+});
+
+vo(0.2, 2.9, "Vous voulez vendre en ligne ?");
+vo(3.2, 7.45, "Catalogue, panier, paiement, livraisons : tout est compris.");
+vo(7.75, 11.85, "Formule Boutique : vingt-neuf euros par mois, sans frais de création.");
+vo(12.05, 14.95, "Choisissez Boutique sur novytek.fr.");
+
+const FEAT_T = [3.3, 4.1, 5.4, 6.05];
+const TAP1 = 4.25, TAP2 = 4.6, TAPC = 4.85, TAPP = 5.35;
+sfx("pop", 0.22, { f: 587.33, gain: -10 });
+FEAT_T.forEach((x, i) => sfx("click", x, { f: 2200 + 150 * i, gain: -17, pan: 0.3 }));
+sfx("pop", TAP1 + 0.05, { f: 880, gain: -12, pan: -0.3 });
+sfx("pop", TAP2 + 0.05, { f: 1046.5, gain: -12, pan: -0.2 });
+sfx("click", TAPC, { f: 2600, gain: -19, pan: -0.3 });
+sfx("whoosh", TAPC + 0.05, { gain: -26, dur: 0.35, pan: -0.3 });
+sfx("click", TAPP, { f: 2600, gain: -19, pan: -0.3 });
+sfx("blip", TAPP + 0.17, { f: 1318.5, gain: -15 });
+sfx("blip", TAPP + 0.29, { f: 1760, gain: -17 });
+sfx("pop", 5.85, { f: 659.25, gain: -14, pan: -0.3 });
+for (let x = 7.85; x < 8.4; x += 0.05) sfx("tick", x, { gain: -27 });
+sfx("pop", 8.42, { f: 783.99, gain: -10 });
+CHIPS.forEach((_, i) => sfx("click", 9.0 + i * 0.15, { f: 3000, gain: -21, pan: (i - 1) * 0.3 }));
+
+// Position (dans le téléphone) des boutons « + » et du panier
+const addPos = i => [PRODS[i][1] + 187 - 10 - 24, PRODS[i][2] + 170 + 24];
+function fingerAt(t) {
+  const pts = [[3.9, 330, 700], [TAP1, ...addPos(0)], [TAP2, ...addPos(3)], [TAPC, 386, 46], [TAPP, 218, 774], [5.9, 280, 860]];
+  if (t < pts[0][0] || t > 5.9) return null;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [ta, xa, ya] = pts[i], [tb, xb, yb] = pts[i + 1];
+    if (t <= tb) { const k = eIO(p(t, ta + 0.05, tb - 0.08)); return [lerp(xa, xb, k), lerp(ya, yb, k), tb]; }
+  }
+  return null;
+}
+
+window.renderFrame = function (t) {
+  frameCommon(t);
+
+  // 1
+  scene("s1", t, 0, 3.05);
+  inOut("s1i", t, 0.1, 0.55, 2.7, 3.0, { dy: 60, s0: 0.3 });
+  if (t > 0.1 && t < 1.2) $("s1i").style.transform += ` rotate(${8 * Math.sin((t - 0.1) * 14) * (1 - p(t, 0.1, 1.2))}deg)`;
+  wordsFrame("s1t", t, 0.35, 0.1, 2.7);
+
+  // 2
+  scene("s2", t, 3.0, 7.65);
+  wordsFrame("s2t", t, 3.15, 0.1, 7.3);
+  inOut("ph", t, 3.2, 3.75, 7.25, 7.6, { dy: 220, oy: 150 });
+  PRODS.forEach((_, i) => { const k = p(t, 3.5 + i * 0.1, 3.9 + i * 0.1); st(`pr${i}`, { opacity: clamp(k * 2), transform: `scale(${lerp(0.7, 1, eBack(k))})` }); });
+  const n = (t >= TAP1 + 0.05) + (t >= TAP2 + 0.05);
+  $("cartBadge").textContent = n;
+  const bump = Math.max(0, 1 - Math.abs(t - (t >= TAP2 ? TAP2 : TAP1) - 0.12) / 0.15);
+  st("cartBadge", { opacity: n ? 1 : 0, transform: `scale(${1 + 0.45 * bump})` });
+  [[0, TAP1], [3, TAP2]].forEach(([i, ta]) => { const pr = $(`pr${i}`); const b = Math.max(0, 1 - Math.abs(t - ta) / 0.12); pr.querySelector(".add").style.transform = `scale(${1 - 0.25 * b})`; });
+  const sh = eOut(p(t, TAPC + 0.08, TAPC + 0.4));
+  st("sheet", { transform: `translateY(${lerp(300, 0, sh)}px)` });
+  const paid = t >= TAPP + 0.15;
+  st("payBtn", { background: paid ? "#2f8f5b" : "var(--shop)", transform: `scale(${1 - 0.06 * Math.max(0, 1 - Math.abs(t - TAPP) / 0.1)})` });
+  $("payTx").textContent = paid ? "Commande validée" : "Payer";
+  $("payIc").innerHTML = paid ? icon("circle-check", 34, "#fff", 2.6) : icon("lock", 28, "#fff", 2.6);
+  inOut("toast", t, 5.8, 6.1, 7.0, 7.25, { dy: -30, oy: -30 });
+  const f = fingerAt(t);
+  if (!f) st("finger", { opacity: 0 });
+  else { const [x, y, tb] = f; const press = Math.max(0, 1 - Math.abs(t - tb) / 0.1); st("finger", { opacity: 1, left: x - 32 + "px", top: y - 32 + "px", transform: `scale(${1 - 0.25 * press})` }); }
+  FEATS.forEach((_, i) => {
+    const a = FEAT_T[i];
+    inOut(`f${i}`, t, a - 0.1, a + 0.25, 7.2 + i * 0.03, 7.5, { dx: 60, dy: 0, ox: 60, oy: 0 });
+    const act = t >= a && t < a + 0.7;
+    st(`f${i}`, { background: act ? "rgba(27,140,227,.22)" : "transparent", borderColor: act ? "#1b8ce3" : "transparent", color: t >= a ? "#eef4fb" : "#9fb3cc" });
+  });
+
+  // 3
+  scene("s3", t, 7.6, 11.95);
+  inOut("s3b", t, 7.8, 8.15, 11.6, 11.9, { dy: 30, s0: 0.6 });
+  inOut("s3e", t, 7.75, 8.05, 11.6, 11.9, { dy: 30 });
+  $("s3n").textContent = Math.round(29 * eOut(p(t, 7.85, 8.4)));
+  inOut("s3p", t, 7.8, 8.2, 11.6, 11.9, { dy: 60, s0: 0.85 });
+  wordsFrame("s3l", t, 8.4, 0.08, 11.6);
+  CHIPS.forEach((_, i) => inOut(`c3_${i}`, t, 9.0 + i * 0.15, 9.35 + i * 0.15, 11.6, 11.9, { dy: 30, s0: 0.8 }));
+};
+window.renderFrame(0);
+</script>
+</body>
+</html>

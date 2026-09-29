@@ -1,0 +1,59 @@
+/* Kit commun des pubs NovyTek — identité relevée sur https://novytek.fr */
+:root {
+  --bg: #08132b;
+  --bg-2: #0a1734;
+  --line: #1b304c;
+  --blue: #1b8ce3;
+  --sky: #7cc6fb;
+  --text: #eef4fb;
+  --muted: #9fb3cc;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { overflow: hidden; background: var(--bg); }
+body { font-family: "Figtree", sans-serif; color: var(--text); }
+.bric, h1, h2, .brand, .big { font-family: "Bricolage Grotesque", sans-serif; }
+#stage { position: relative; overflow: hidden; background: var(--bg); }
+.abs { position: absolute; }
+.scene { position: absolute; inset: 0; }
+.eyebrow { font-size: 26px; font-weight: 700; letter-spacing: 6px; color: var(--sky); text-transform: uppercase; }
+.hl { color: var(--sky); }
+.muted { color: var(--muted); }
+.center { left: 0; right: 0; text-align: center; }
+
+/* Titres cinétiques (mots qui montent) */
+.title { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; letter-spacing: -3px; line-height: 1.02; }
+.w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 12px; }
+.w > span { display: inline-block; }
+
+/* Fond */
+.stripe { position: absolute; left: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(27,140,227,.55), transparent); }
+#halo { position: absolute; width: 1100px; height: 1100px; border-radius: 50%; background: radial-gradient(circle, rgba(27,140,227,.28), transparent 65%); }
+#sweep { position: absolute; left: 0; width: 100%; background: var(--blue); display: none; }
+
+/* Éléments d'interface */
+.btn { display: inline-flex; align-items: center; gap: 18px; padding: 38px 64px; border-radius: 26px; background: var(--blue); color: #fff; font-size: 52px; font-weight: 700; box-shadow: 0 30px 60px -24px rgba(27,140,227,.9); }
+.chip { display: inline-flex; align-items: center; gap: 14px; padding: 18px 30px; border-radius: 999px; border: 2px solid var(--line); background: rgba(10,23,52,.85); font-size: 30px; font-weight: 600; }
+.chip svg { flex: none; }
+.card { background: var(--bg-2); border: 2px solid var(--line); border-radius: 34px; }
+.badge { display: inline-block; background: var(--blue); color: #fff; font-size: 26px; font-weight: 700; padding: 10px 24px; border-radius: 999px; }
+.row { display: flex; align-items: center; gap: 22px; padding: 0 24px; border-radius: 20px; border: 2px solid transparent; }
+.ic { width: 64px; height: 64px; flex: none; border-radius: 18px; background: rgba(27,140,227,.16); display: flex; align-items: center; justify-content: center; }
+.phone { position: absolute; border-radius: 56px; background: #fff; border: 12px solid #16233f; overflow: hidden; box-shadow: 0 40px 120px -30px rgba(27,140,227,.6); }
+.sk { position: absolute; border-radius: 8px; }
+
+/* Carton de fin (logo exact de l'en-tête du site) */
+#brandWrap { left: 0; right: 0; display: flex; justify-content: center; }
+#brand { display: flex; align-items: center; gap: 34px; }
+#brand .word { font-size: 124px; font-weight: 800; letter-spacing: -3px; overflow: hidden; white-space: nowrap; }
+#wordIn { display: inline-block; }
+#cta, #url, #fine { left: 0; right: 0; text-align: center; }
+#url { font-size: 64px; font-weight: 800; }
+#fine { font-size: 34px; color: var(--muted); font-weight: 600; }
+body.v #brandWrap { top: 560px; }
+body.v #cta { top: 900px; }
+body.v #url { top: 1125px; }
+body.v #fine { top: 1235px; }
+body.h #brandWrap { top: 250px; }
+body.h #cta { top: 540px; }
+body.h #url { top: 760px; }
+body.h #fine { top: 860px; }
