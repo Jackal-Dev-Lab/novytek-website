@@ -41,15 +41,15 @@
 <script src="kit.js"></script>
 <script>
 // ---------- Calques texte (au-dessus de la 3D) ----------
-words("s1t", "Votre site web,\n*à vous.*");
-words("s2t", "Section par section,\n*sans une ligne de code.*");
+words("s1t", "Le web, plié\n*à vos envies.*");
+words("s2t", "Donnez forme à\n*votre entreprise.*");
 $("pill").innerHTML = `${icon("layers", 30, "#7cc6fb", 2.4)}Les 24 sections comprises`;
 words("s3t", "Sans frais\n*de création.*");
 const CHIPS = ["Hébergement inclus", "Sans engagement"];
 $("s3c").innerHTML = CHIPS.map((c, i) => `<span class="chip glass" id="c3_${i}">${icon("circle-check", 30, "#7cc6fb", 2.6)}${c}</span>`).join("");
 
 // ---------- Timeline (s) ----------
-// 0.0–3.4  Logo 3D (tuile + N en relief + anneau) · « Votre site web, à vous »
+// 0.0–3.4  Logo 3D (Pli en volume + anneau) · « Le web, plié à vos envies »
 // 3.4–7.7  Téléphone 3D : les sections s'emboîtent, la couleur change
 // 7.7–11.6 Les 3 formules en cartes de verre · « Sans frais de création »
 // 11.6–15  Logo 3D + « Composer mon site → »
@@ -57,8 +57,8 @@ setup({
   sweeps: [3.4, 7.7, 11.6], end: 11.6, cta: "Composer mon site →",
   pad: [["D2", "D3", "F#3", "A3", "E4"], ["B1", "B2", "D3", "F#3", "A3"], ["G2", "G3", "B3", "D4", "F#4"], ["A2", "A3", "C#4", "E4", "B4"]],
 });
-vo(0.25, 3.35, "Votre site web… sans y passer vos soirées.");
-vo(3.6, 7.55, "Vous le composez section par section, sans une ligne de code.");
+vo(0.25, 3.35, "Le web, plié à vos envies… sans y passer vos soirées.");
+vo(3.6, 7.55, "Donnez forme à votre entreprise, section par section.");
 vo(7.9, 11.45, "Dès dix-neuf euros par mois… sans frais de création.");
 vo(11.8, 14.95, "Composez votre site sur novytek.fr.");
 

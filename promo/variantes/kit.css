@@ -48,7 +48,7 @@ body { font-family: "Figtree", sans-serif; color: var(--text); }
 #wordIn { display: inline-block; }
 #cta, #url, #fine { left: 0; right: 0; text-align: center; }
 #url { font-size: 64px; font-weight: 800; }
-#fine { font-size: 34px; color: var(--muted); font-weight: 600; }
+#fine { font-size: 42px; color: var(--text); font-weight: 700; }
 body.v #brandWrap { top: 560px; }
 body.v #cta { top: 900px; }
 body.v #url { top: 1125px; }

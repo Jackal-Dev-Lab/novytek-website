@@ -3,6 +3,9 @@
 Quatre pubs de 15 s au format vertical 1080×1920, dans le même style que la première (la 4e en 3D). Les textes et les tarifs
 sont repris de https://novytek.fr (accueil et /formules).
 
+**Signature de marque : « Votre site, vos règles. »** (fin de chaque vidéo, cartes, affiches).
+Accroches : « Le web, plié à vos envies. » · « Donnez forme à votre entreprise. » · « Simple à lancer. Facile à garder. »
+
 ## Comment enregistrer
 
 - **Un fichier par pub**, par exemple `voix-probleme.m4a`, `voix-boutique.m4a` et `voix-minute.m4a`.
@@ -39,7 +42,7 @@ sont repris de https://novytek.fr (accueil et /formules).
 | 2 | Étape 1 : choix de la formule | « Vous configurez, » | 1,7 s |
 | 3 | Étape 2 : paiement | « vous payez, » | 1,6 s |
 | 4 | Étape 3 : l'adresse se tape, le site apparaît | « et votre site existe. » | 1,7 s |
-| 5 | « Vous le rendez vôtre » : textes, couleurs, disposition… | « Vous le modifiez vous-même, sans engagement. » | 3,1 s |
+| 5 | « Simple à lancer. Facile à garder. » : textes, couleurs, disposition… | « Simple à lancer… facile à garder. » | 3,1 s |
 | 6 | Logo + « Configurer votre site » | « Lancez-vous sur novytek.fr. » | 2,3 s |
 
 Pour la pub 3, les phrases 2 à 4 sont très courtes : marquez bien une pause nette entre elles.
@@ -50,8 +53,8 @@ Personnalisé demande 10 à 15 jours ouvrés d'après le site.
 
 | # | À l'écran | À dire | Durée cible |
 |---|---|---|---|
-| 1 | Logo 3D en orbite + « Votre site web, à vous. Sans y passer vos soirées. » | « Votre site web… sans y passer vos soirées. » | 3,1 s |
-| 2 | Téléphone 3D : les sections s'emboîtent, la couleur change | « Vous le composez section par section, sans une ligne de code. » | 3,9 s |
+| 1 | Logo 3D en orbite + « Le web, plié à vos envies. Sans y passer vos soirées. » | « Le web, plié à vos envies… sans y passer vos soirées. » | 3,1 s |
+| 2 | « Donnez forme à votre entreprise » + téléphone 3D : les sections s'emboîtent | « Donnez forme à votre entreprise, section par section. » | 3,9 s |
 | 3 | Les 3 formules en cartes de verre + « Sans frais de création » | « Dès dix-neuf euros par mois… sans frais de création. » | 3,5 s |
 | 4 | Logo 3D + « Composer mon site → » | « Composez votre site sur novytek.fr. » | 3,1 s |
 

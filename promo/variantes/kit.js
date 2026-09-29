@@ -95,7 +95,7 @@ endEl.innerHTML = `
   </div></div>
   <div class="abs" id="cta"><span class="btn" id="ctaBtn"></span></div>
   <div class="abs brand" id="url">novytek.fr</div>
-  <div class="abs" id="fine">Sans engagement · Hébergé en France</div>`;
+  <div class="abs" id="fine">Votre site, <span class="hl">vos règles.</span></div>`;
 stage.appendChild(endEl);
 
 // ---------- Balayage de transition (au-dessus de tout) ----------

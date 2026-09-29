@@ -38,7 +38,7 @@
   #live { position: absolute; right: 26px; top: 116px; display: flex; align-items: center; gap: 10px; padding: 10px 20px; border-radius: 999px; background: #0a1734; color: #fff; font-size: 26px; font-weight: 700; }
   #live b { width: 14px; height: 14px; border-radius: 50%; background: #3ecf7a; display: block; }
 
-  body.v #s3t { left: 80px; top: 430px; font-size: 110px; }
+  body.v #s3t { left: 80px; top: 430px; font-size: 100px; }
   body.v #s3c { left: 60px; right: 60px; top: 730px; display: flex; flex-wrap: wrap; gap: 20px; }
   #s3c .chip { font-size: 40px; padding: 22px 36px; }
   body.v #s3a { left: 80px; top: 1040px; font-size: 80px; font-weight: 800; letter-spacing: -2px; }
@@ -114,7 +114,7 @@ $("steps").innerHTML = STEPS.map((s, i) => `<div class="row step" id="stp${i}"><
 $("globe").innerHTML = icon("globe", 36, "#7cc6fb", 2.2);
 $("lockIc").innerHTML = icon("lock", 40, "#7cc6fb", 2.4);
 $("okIc").innerHTML = icon("circle-check", 56, "#7cc6fb", 2.4);
-words("s3t", "Vous le\n*rendez vôtre.*");
+words("s3t", "Simple à lancer.\n*Facile à garder.*");
 // Ce que l'éditeur permet de modifier (novytek.fr/formules, étape 4)
 const EDIT = [["type", "Textes"], ["palette", "Couleurs"], ["layout-grid", "Disposition"], ["menu", "Menu"], ["layers", "Sections"]];
 $("s3c").innerHTML = EDIT.map(([ic, tx], i) => `<span class="chip" id="c3_${i}">${icon(ic, 40, "#7cc6fb", 2.2)}${tx}</span>`).join("");
@@ -134,7 +134,7 @@ vo(0.2, 3.1, "Votre site en ligne… dans la minute ?");
 vo(3.4, 5.1, "Vous configurez,");
 vo(5.3, 6.9, "vous payez,");
 vo(7.1, 8.8, "et votre site existe.");
-vo(9.15, 12.3, "Vous le modifiez vous-même, sans engagement.");
+vo(9.15, 12.3, "Simple à lancer… facile à garder.");
 vo(12.6, 14.95, "Lancez-vous sur novytek.fr.");
 
 const ST = [3.35, 5.2, 7.0], SEL = 3.9, TAP = 5.7, OK = 6.3, TYPE0 = 7.15, TYPE1 = 7.9, PAGE = 8.0, LIVE = 8.45;
