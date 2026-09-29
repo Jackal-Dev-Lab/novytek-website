@@ -20,7 +20,7 @@ import * as THREE from "three";
 import { RoomEnvironment } from "../variantes/3d/jsm/environments/RoomEnvironment.js";
 
 const W = innerWidth, H = innerHeight;
-window.DURATION = 6.5;
+window.DURATION = 6.9;
 
 // ---------- Outils ----------
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -34,9 +34,9 @@ const lerp = (a, b, x) => a + (b - a) * x;
 // ---------- Timeline (s) ----------
 const SPIN1 = [0.0, 1.45];   // arrivée en tournant (1 tour et demi)
 const TAP_SUB = 2.35;        // appui sur « S'abonner »
-const TAP_BELL = 2.95;       // appui sur « Abonné » (menu des notifications)
-const TAP_ALL = 3.55;        // appui sur « Toutes »
-const SPIN2 = [4.75, 5.75];  // tour complet final
+const TAP_BELL = 3.35;       // appui sur « Abonné » (menu des notifications)
+const TAP_ALL = 3.95;        // appui sur « Toutes »
+const SPIN2 = [5.1, 6.1];  // tour complet final
 window.SFX = [
   { type: "whoosh", t: 0.0, dur: 1.2, gain: -8 },
   { type: "whoosh", t: 0.55, dur: 0.8, gain: -12, pan: 0.4 },
@@ -45,6 +45,7 @@ window.SFX = [
   { type: "click", t: TAP_SUB, f: 2600, gain: -10 },
   { type: "pop", t: TAP_SUB + 0.06, f: 659.25, gain: -9 },
   { type: "blip", t: TAP_SUB + 0.14, f: 1318.5, gain: -13 },
+  { type: "pop", t: TAP_SUB + 0.47, f: 523.25, gain: -13 },
   { type: "click", t: TAP_BELL, f: 2600, gain: -10 },
   { type: "whoosh", t: TAP_BELL + 0.05, dur: 0.3, gain: -22 },
   { type: "click", t: TAP_ALL, f: 2600, gain: -10 },
@@ -147,6 +148,7 @@ const lines = Array.from({ length: 8 }, (_, i) => { const m = new THREE.Mesh(new
 // ---------- Écran : page de la chaîne ----------
 await Promise.all(['700 40px Figtree', '600 30px Figtree', '500 30px Figtree'].map(f => document.fonts.load(f, "Aé")));
 const avatar = new Image(); avatar.src = "avatar.png"; await avatar.decode();
+const banner = new Image(); banner.src = "banner.png"; await banner.decode();
 const g = scr.getContext("2d"), SWp = scr.width, SHp = scr.height;
 const icon = (name, x, y, size, color, lw = 2) => { g.save(); g.translate(x, y); g.scale(size / 24, size / 24); g.strokeStyle = color; g.lineWidth = lw; g.lineCap = "round"; g.lineJoin = "round"; g.stroke(new Path2D(IC[name])); g.restore(); };
 const rr = (x, y, w, h, r, fill) => { g.fillStyle = fill; g.beginPath(); g.roundRect(x, y, w, h, r); g.fill(); };
@@ -154,18 +156,18 @@ const SUB_BTN = { x: 40, y: 760, w: 780, h: 96 };
 const ROWS = ["Toutes", "Personnalisées", "Aucune", "Se désabonner"];
 const SHEET_H = 620;
 function drawScreen(t) {
-  const subbed = t >= TAP_SUB + 0.05, notif = t >= TAP_ALL + 0.1;
+  const subbed = t >= TAP_SUB + 0.1, notif = t >= TAP_ALL + 0.1;
   g.fillStyle = "#0f0f0f"; g.fillRect(0, 0, SWp, SHp);
   // barre d'état + Dynamic Island
-  g.fillStyle = "#fff"; g.font = "700 38px Figtree"; g.fillText("9:41", 70, 88);
+  g.fillStyle = "#fff"; g.font = "700 38px Figtree"; g.fillText("10:10", 70, 88);
   rr(SWp / 2 - 125, 34, 250, 74, 37, "#000");
   [0, 1, 2, 3].forEach(i => rr(SWp - 190 + i * 16, 82 - i * 8, 10, 12 + i * 8, 3, "#fff"));
   rr(SWp - 110, 62, 58, 30, 9, "#fff"); rr(SWp - 50, 70, 5, 14, 2, "#fff");
   // barre du haut
   icon("arrow-left", 44, 150, 50, "#fff", 2.2); icon("search", SWp - 190, 150, 48, "#fff", 2.2); icon("ellipsis-vertical", SWp - 100, 150, 48, "#fff", 2.2);
-  // bannière (couleurs du coucher de soleil de l'avatar)
-  const gr = g.createLinearGradient(0, 230, 0, 420); gr.addColorStop(0, "#f2b8a0"); gr.addColorStop(0.45, "#b9a7c9"); gr.addColorStop(1, "#2c4a73");
-  g.fillStyle = gr; g.beginPath(); g.roundRect(40, 230, SWp - 80, 190, 24); g.fill();
+  // bannière de la chaîne, recadrée au centre (comme sur mobile)
+  { const bw = SWp - 80, bh = 190, sw = banner.height * bw / bh, sx = (banner.width - sw) / 2;
+    g.save(); g.beginPath(); g.roundRect(40, 230, bw, bh, 24); g.clip(); g.drawImage(banner, sx, 0, sw, banner.height, 40, 230, bw, bh); g.restore(); }
   // avatar
   g.save(); g.beginPath(); g.arc(150, 560, 100, 0, Math.PI * 2); g.clip();
   g.drawImage(avatar, 163 - 146, 160 - 146, 292, 292, 50, 460, 200, 200); g.restore();
@@ -182,10 +184,20 @@ function drawScreen(t) {
   const press = Math.max(0, 1 - Math.abs(t - TAP_SUB) / 0.12) + Math.max(0, 1 - Math.abs(t - TAP_BELL) / 0.12);
   const sc = 1 - 0.04 * press;
   g.save(); g.translate(b.x + b.w / 2, b.y + b.h / 2); g.scale(sc, sc); g.translate(-(b.x + b.w / 2), -(b.y + b.h / 2));
-  if (!subbed) {
-    rr(b.x, b.y, b.w, b.h, 48, "#f1f1f1");
-    g.fillStyle = "#0f0f0f"; g.font = "700 36px Figtree"; g.textAlign = "center"; g.fillText("S'abonner", b.x + b.w / 2, b.y + 61); g.textAlign = "left";
-  } else {
+  // au clic : le bouton passe au rouge (impulsion + halo), puis devient « Abonné »
+  const redOn = t >= TAP_SUB, greyA = p(t, TAP_SUB + 0.4, TAP_SUB + 0.55);
+  if (greyA < 1) {
+    const kr = p(t, TAP_SUB, TAP_SUB + 0.5);
+    if (redOn) {
+      const pop = 1 + 0.07 * Math.sin(Math.PI * p(t, TAP_SUB + 0.03, TAP_SUB + 0.3));
+      g.translate(b.x + b.w / 2, b.y + b.h / 2); g.scale(pop, pop); g.translate(-(b.x + b.w / 2), -(b.y + b.h / 2));
+      [0, 0.18].forEach(d => { const k = p(t, TAP_SUB + d, TAP_SUB + d + 0.45); if (k > 0 && k < 1) { g.strokeStyle = `rgba(255,0,51,${0.8 * (1 - k)})`; g.lineWidth = 8; g.beginPath(); g.roundRect(b.x - 34 * k, b.y - 34 * k, b.w + 68 * k, b.h + 68 * k, 48 + 34 * k); g.stroke(); } });
+    }
+    rr(b.x, b.y, b.w, b.h, 48, redOn ? "#ff0033" : "#f1f1f1");
+    g.fillStyle = redOn ? "#fff" : "#0f0f0f"; g.font = "700 36px Figtree"; g.textAlign = "center"; g.fillText("S'abonner", b.x + b.w / 2, b.y + 61); g.textAlign = "left";
+  }
+  if (greyA > 0) {
+    g.globalAlpha = greyA;
     rr(b.x, b.y, b.w, b.h, 48, "#272727");
     const ringing = notif && t < TAP_ALL + 1.4;
     const wig = ringing ? Math.sin((t - TAP_ALL) * 40) * 0.35 * (1 - p(t, TAP_ALL, TAP_ALL + 1.4)) : 0;
@@ -193,6 +205,7 @@ function drawScreen(t) {
     icon(notif ? "bell-ring" : "bell", -22, -22, 44, "#fff", 2.2); g.restore();
     g.fillStyle = "#fff"; g.font = "700 36px Figtree"; g.fillText("Abonné", b.x + b.w / 2 - 70, b.y + 61);
     icon("chevron-down", b.x + b.w / 2 + 70, b.y + 28, 40, "#fff", 2.4);
+    g.globalAlpha = 1;
   }
   g.restore();
   // onglets
@@ -255,12 +268,12 @@ function spinSpeed(t) { const d = 1 / 60; return Math.abs(spinAngle(t + d) - spi
 window.renderFrame = t => {
   drawScreen(t);
   // zoom caméra pendant l'abonnement, recul pour le tour final
-  const z = eIO(p(t, 1.55, 2.05)) * (1 - eIO(p(t, 4.35, 4.75)));
+  const z = eIO(p(t, 1.55, 2.05)) * (1 - eIO(p(t, 4.7, 5.1)));
   camera.position.set(0, lerp(0, 1.0, z), lerp(36, 28, z));
   camera.lookAt(0, lerp(0, 1.0, z), 0);
   const k = eOut(p(t, 0, 1.2));
   phone.scale.setScalar(lerp(0.55, 1, k) * (1 + 0.03 * Math.max(0, Math.sin(p(t, 1.4, 1.8) * Math.PI))));
-  const sway = 0.12 * Math.sin(t * 1.4) * p(t, 1.6, 2.1) * (1 - p(t, 4.5, 4.75));
+  const sway = 0.12 * Math.sin(t * 1.4) * p(t, 1.6, 2.1) * (1 - p(t, 4.85, 5.1));
   phone.rotation.set(0.05 + 0.04 * Math.sin(t * 1.1), spinAngle(t) + sway, -0.04 + 0.02 * Math.sin(t * 0.9));
   phone.position.y = 0.25 * Math.sin(t * 1.6) + lerp(-6, 0, k);
   // effets : arcs et lignes proportionnels à la vitesse de rotation
