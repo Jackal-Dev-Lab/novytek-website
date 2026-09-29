@@ -1,0 +1,222 @@
+{
+ "duration": 15,
+ "pad": [
+  [
+   "D2",
+   "D3",
+   "F#3",
+   "A3",
+   "E4"
+  ],
+  [
+   "B1",
+   "B2",
+   "D3",
+   "F#3",
+   "A3"
+  ],
+  [
+   "G2",
+   "G3",
+   "B3",
+   "D4",
+   "F#4"
+  ],
+  [
+   "A2",
+   "A3",
+   "C#4",
+   "E4",
+   "B4"
+  ]
+ ],
+ "sfx": [
+  {
+   "type": "whoosh",
+   "t": 3.07,
+   "gain": -12,
+   "pan": 0.4
+  },
+  {
+   "type": "whoosh",
+   "t": 7.37,
+   "gain": -12,
+   "pan": -0.4
+  },
+  {
+   "type": "whoosh",
+   "t": 11.27,
+   "gain": -12,
+   "pan": 0.4
+  },
+  {
+   "type": "riser",
+   "t": 10.75,
+   "gain": -18,
+   "dur": 0.9
+  },
+  {
+   "type": "pop",
+   "t": 11.95,
+   "f": 660,
+   "dur": 0.16,
+   "gain": -9
+  },
+  {
+   "type": "bell",
+   "t": 12.55,
+   "f": 1318.5,
+   "gain": -16
+  },
+  {
+   "type": "bell",
+   "t": 12.57,
+   "f": 1975.5,
+   "dur": 1.2,
+   "gain": -26,
+   "pan": 0.3
+  },
+  {
+   "type": "whoosh",
+   "t": 0.05,
+   "gain": -13,
+   "dur": 0.95
+  },
+  {
+   "type": "thud",
+   "t": 0.95,
+   "f": 90,
+   "gain": -10
+  },
+  {
+   "type": "blip",
+   "t": 0.75,
+   "f": 1567.98,
+   "gain": -21,
+   "pan": 0.4
+  },
+  {
+   "type": "pop",
+   "t": 4.22,
+   "f": 523.25,
+   "gain": -13,
+   "pan": -0.3
+  },
+  {
+   "type": "pop",
+   "t": 4.52,
+   "f": 587.33,
+   "gain": -13,
+   "pan": 0.3
+  },
+  {
+   "type": "pop",
+   "t": 4.82,
+   "f": 659.25,
+   "gain": -13,
+   "pan": -0.3
+  },
+  {
+   "type": "pop",
+   "t": 5.12,
+   "f": 698.46,
+   "gain": -13,
+   "pan": 0.3
+  },
+  {
+   "type": "pop",
+   "t": 5.42,
+   "f": 783.99,
+   "gain": -13,
+   "pan": -0.3
+  },
+  {
+   "type": "pop",
+   "t": 5.72,
+   "f": 880,
+   "gain": -13,
+   "pan": 0.3
+  },
+  {
+   "type": "blip",
+   "t": 6.3,
+   "f": 1046.5,
+   "gain": -17
+  },
+  {
+   "type": "blip",
+   "t": 6.7,
+   "f": 1174.66,
+   "gain": -17
+  },
+  {
+   "type": "blip",
+   "t": 7.1,
+   "f": 1318.5,
+   "gain": -17
+  },
+  {
+   "type": "whoosh",
+   "t": 7.85,
+   "gain": -20,
+   "dur": 0.6
+  },
+  {
+   "type": "pop",
+   "t": 8.55,
+   "f": 659.25,
+   "gain": -12,
+   "pan": -0.4
+  },
+  {
+   "type": "pop",
+   "t": 8.4,
+   "f": 783.99,
+   "gain": -12,
+   "pan": 0
+  },
+  {
+   "type": "pop",
+   "t": 8.7,
+   "f": 587.33,
+   "gain": -12,
+   "pan": 0.4
+  },
+  {
+   "type": "click",
+   "t": 9.1,
+   "f": 3000,
+   "gain": -20,
+   "pan": -0.3
+  },
+  {
+   "type": "click",
+   "t": 9.25,
+   "f": 3000,
+   "gain": -20,
+   "pan": 0.3
+  }
+ ],
+ "vo": [
+  {
+   "t0": 0.25,
+   "t1": 3.35,
+   "text": "Votre site web… sans y passer vos soirées."
+  },
+  {
+   "t0": 3.6,
+   "t1": 7.55,
+   "text": "Vous le composez section par section, sans une ligne de code."
+  },
+  {
+   "t0": 7.9,
+   "t1": 11.45,
+   "text": "Dès dix-neuf euros par mois… sans frais de création."
+  },
+  {
+   "t0": 11.8,
+   "t1": 14.95,
+   "text": "Composez votre site sur novytek.fr."
+  }
+ ]
+}

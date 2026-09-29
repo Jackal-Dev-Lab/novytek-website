@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Pub NovyTek – 3D</title>
+<link href="../fonts.css" rel="stylesheet">
+<link href="kit.css" rel="stylesheet">
+<script type="importmap">{ "imports": { "three": "./3d/three.module.min.js" } }</script>
+<style>
+  /* Textes et tarifs repris de https://novytek.fr ; rendu 3D avec three.js (licence MIT, voir 3d/LICENSE-three.txt) */
+  #gl { position: absolute; left: 0; top: 0; }
+  #brandWrap { display: none !important; } /* le logo du carton de fin est en 3D */
+  body.v #s1t { left: 0; right: 0; text-align: center; top: 1150px; font-size: 112px; }
+  body.v #s1s { top: 1420px; font-size: 44px; font-weight: 600; }
+  body.v #s2t { left: 80px; top: 230px; font-size: 84px; }
+  body.v #s2p { left: 80px; top: 440px; }
+  body.v #s3t { left: 0; right: 0; text-align: center; top: 240px; font-size: 104px; }
+  body.v #s3c { left: 60px; right: 60px; top: 1430px; display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; }
+  .glass { background: rgba(10,23,52,.72); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="gl"></canvas>
+  <div class="scene" id="s1">
+    <h1 class="abs title" id="s1t"></h1>
+    <div class="abs center muted" id="s1s">Sans y passer vos soirées.</div>
+  </div>
+  <div class="scene" id="s2">
+    <h2 class="abs title" id="s2t"></h2>
+    <div class="abs" id="s2p"><span class="chip glass" id="pill"></span></div>
+  </div>
+  <div class="scene" id="s3">
+    <h2 class="abs title" id="s3t"></h2>
+    <div class="abs" id="s3c"></div>
+  </div>
+</div>
+
+<script>window.READY = false;</script>
+<script src="icons.js"></script>
+<script src="kit.js"></script>
+<script>
+// ---------- Calques texte (au-dessus de la 3D) ----------
+words("s1t", "Votre site web,\n*à vous.*");
+words("s2t", "Section par section,\n*sans une ligne de code.*");
+$("pill").innerHTML = `${icon("layers", 30, "#7cc6fb", 2.4)}Les 24 sections comprises`;
+words("s3t", "Sans frais\n*de création.*");
+const CHIPS = ["Hébergement inclus", "Sans engagement"];
+$("s3c").innerHTML = CHIPS.map((c, i) => `<span class="chip glass" id="c3_${i}">${icon("circle-check", 30, "#7cc6fb", 2.6)}${c}</span>`).join("");
+
+// ---------- Timeline (s) ----------
+// 0.0–3.4  Logo 3D (tuile + N en relief + anneau) · « Votre site web, à vous »
+// 3.4–7.7  Téléphone 3D : les sections s'emboîtent, la couleur change
+// 7.7–11.6 Les 3 formules en cartes de verre · « Sans frais de création »
+// 11.6–15  Logo 3D + « Composer mon site → »
+setup({
+  sweeps: [3.4, 7.7, 11.6], end: 11.6, cta: "Composer mon site →",
+  pad: [["D2", "D3", "F#3", "A3", "E4"], ["B1", "B2", "D3", "F#3", "A3"], ["G2", "G3", "B3", "D4", "F#4"], ["A2", "A3", "C#4", "E4", "B4"]],
+});
+vo(0.25, 3.35, "Votre site web… sans y passer vos soirées.");
+vo(3.6, 7.55, "Vous le composez section par section, sans une ligne de code.");
+vo(7.9, 11.45, "Dès dix-neuf euros par mois… sans frais de création.");
+vo(11.8, 14.95, "Composez votre site sur novytek.fr.");
+
+const BLOCK_T = i => 3.8 + i * 0.3;          // arrivée des sections
+const COLORS_T = [6.3, 6.7, 7.1];             // changements de couleur
+const CARD_T = [8.05, 7.9, 8.2];              // arrivée des cartes (Vitrine, Boutique, Personnalisé)
+sfx("whoosh", 0.05, { gain: -13, dur: 0.95 });
+sfx("thud", 0.95, { f: 90, gain: -10 });
+sfx("blip", 0.75, { f: 1567.98, gain: -21, pan: 0.4 });
+for (let i = 0; i < 6; i++) sfx("pop", BLOCK_T(i) + 0.42, { f: [523.25, 587.33, 659.25, 698.46, 783.99, 880][i], gain: -13, pan: (i % 2 ? 0.3 : -0.3) });
+COLORS_T.forEach((x, k) => sfx("blip", x, { f: [1046.5, 1174.66, 1318.5][k], gain: -17 }));
+sfx("whoosh", 7.85, { gain: -20, dur: 0.6 });
+CARD_T.forEach((x, i) => sfx("pop", x + 0.5, { f: [659.25, 783.99, 587.33][i], gain: -12, pan: [-0.4, 0, 0.4][i] }));
+CHIPS.forEach((_, i) => sfx("click", 9.1 + i * 0.15, { f: 3000, gain: -20, pan: i ? 0.3 : -0.3 }));
+
+function overlayFrame(t) {
+  frameCommon(t);
+  scene("s1", t, 0, 3.45);
+  wordsFrame("s1t", t, 1.0, 0.1, 3.1);
+  inOut("s1s", t, 1.6, 2.0, 3.1, 3.4, { dy: 30 });
+  scene("s2", t, 3.4, 7.75);
+  wordsFrame("s2t", t, 3.55, 0.08, 7.4);
+  inOut("s2p", t, 4.0, 4.35, 7.4, 7.7, { dy: 20, s0: 0.8 });
+  scene("s3", t, 7.7, 11.65);
+  wordsFrame("s3t", t, 7.85, 0.1, 11.3);
+  CHIPS.forEach((_, i) => inOut(`c3_${i}`, t, 9.1 + i * 0.15, 9.45 + i * 0.15, 11.3, 11.6, { dy: 30, s0: 0.8 }));
+}
+</script>
+
+<script type="module">
+import * as THREE from "three";
+import { RoomEnvironment } from "./3d/jsm/environments/RoomEnvironment.js";
+import { RoundedBoxGeometry } from "./3d/jsm/geometries/RoundedBoxGeometry.js";
+import { EffectComposer } from "./3d/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "./3d/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "./3d/jsm/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "./3d/jsm/postprocessing/OutputPass.js";
+
+// ---------- Moteur ----------
+const canvas = $("gl");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H, false);
+canvas.style.width = W + "px"; canvas.style.height = H + "px";
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.9;
+const scene3 = new THREE.Scene();
+scene3.background = new THREE.Color(0x08132b);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene3.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene3.environmentIntensity = 0.32;
+const camera = new THREE.PerspectiveCamera(35, W / H, 0.1, 100);
+camera.position.set(0, 0, 14);
+const UNIT = H / (2 * 14 * Math.tan(THREE.MathUtils.degToRad(17.5))); // pixels par unité au plan z = 0
+const py = px => (H / 2 - px) / UNIT;                                   // ordonnée écran (px) -> monde
+
+const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-4, 6, 8); scene3.add(key);
+const glint = new THREE.PointLight(0x9fd4ff, 0, 18, 1.5); scene3.add(glint);
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene3, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.38, 0.4, 1.0); // seules les couleurs > 1 brillent
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+// ---------- Matériaux ----------
+const blueMat = new THREE.MeshPhysicalMaterial({ color: 0x1b8ce3, metalness: 0.15, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.06 });
+const whiteMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.0, roughness: 0.18, clearcoat: 1 });
+const glowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0x7cc6fb).multiplyScalar(2.4), toneMapped: false });
+const darkMat = new THREE.MeshPhysicalMaterial({ color: 0x16233f, metalness: 0.55, roughness: 0.28, clearcoat: 1 });
+const lightMat = new THREE.MeshStandardMaterial({ color: 0xc9d3df, roughness: 0.6 });
+const greyMat = new THREE.MeshStandardMaterial({ color: 0x9aa6b8, roughness: 0.6 });
+const accentMat = new THREE.MeshPhysicalMaterial({ color: 0x1b8ce3, roughness: 0.3, clearcoat: 0.6 });
+
+function roundedRect(w, h, r) {
+  const s = new THREE.Shape(), x = -w / 2, y = -h / 2;
+  s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+  s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r);
+  s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+  return s;
+}
+function slab(w, h, r, depth, bevel, mat) {
+  const g = new THREE.ExtrudeGeometry(roundedRect(w, h, r), { depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 5, curveSegments: 20 });
+  g.center();
+  return new THREE.Mesh(g, mat);
+}
+
+// ---------- Fond : halo, bandes lumineuses, particules ----------
+function gradTex(kind) {
+  const c = document.createElement("canvas"); c.width = c.height = 256;
+  const g = c.getContext("2d");
+  const grd = kind === "radial" ? g.createRadialGradient(128, 128, 0, 128, 128, 128) : g.createLinearGradient(0, 0, 256, 0);
+  if (kind === "radial") { grd.addColorStop(0, "rgba(27,140,227,0.3)"); grd.addColorStop(1, "rgba(27,140,227,0)"); }
+  else { grd.addColorStop(0, "rgba(27,140,227,0)"); grd.addColorStop(0.5, "rgba(27,140,227,0.9)"); grd.addColorStop(1, "rgba(27,140,227,0)"); }
+  g.fillStyle = grd; g.fillRect(0, 0, 256, 256);
+  const tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; return tx;
+}
+const halo = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), new THREE.MeshBasicMaterial({ map: gradTex("radial"), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+halo.position.z = -6; scene3.add(halo);
+const stripeMat = new THREE.MeshBasicMaterial({ map: gradTex("linear"), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.55 });
+const STR = [[-7.5, 0.9], [-4.6, 0.6], [-1.2, 1.1], [1.6, 0.7], [4.4, 1.0], [7.3, 0.8]].map(([y, sp]) => {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(7, 0.035), stripeMat); m.position.set(0, y, -5); scene3.add(m); return [m, sp];
+});
+const NP = 520, rnd = (() => { let s = 12345; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+const pPos = new Float32Array(NP * 3), pBase = [];
+for (let i = 0; i < NP; i++) pBase.push([rnd() * 14 - 7, rnd() * 22 - 11, rnd() * 16 - 12, 0.4 + rnd() * 1.2]);
+const pGeo = new THREE.BufferGeometry(); pGeo.setAttribute("position", new THREE.BufferAttribute(pPos, 3));
+const dot = (() => { const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d"); const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, "rgba(255,255,255,1)"); r.addColorStop(0.4, "rgba(160,215,255,.6)"); r.addColorStop(1, "rgba(160,215,255,0)"); g.fillStyle = r; g.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c); })();
+const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ size: 0.09, map: dot, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, color: 0x7cc6fb }));
+scene3.add(particles);
+
+// ---------- Logo 3D : tuile arrondie + N en relief + anneau en orbite ----------
+function makeLogo() {
+  const g = new THREE.Group();
+  const body = slab(34, 34, 10, 5, 1.4, blueMat); g.add(body);
+  const front = 2.5 + 1.4;
+  // N du logo (tracé M10 24 V10 l14 14 V10, trait 3.2, bouts ronds) en tubes
+  const P = [[-7, -7], [-7, 7], [7, -7], [7, 7]];
+  for (let i = 0; i < 3; i++) {
+    const [x1, y1] = P[i], [x2, y2] = P[i + 1], len = Math.hypot(x2 - x1, y2 - y1);
+    const m = new THREE.Mesh(new THREE.CapsuleGeometry(1.6, len, 10, 24), whiteMat);
+    m.position.set((x1 + x2) / 2, (y1 + y2) / 2, front + 0.15);
+    m.rotation.z = Math.atan2(y2 - y1, x2 - x1) - Math.PI / 2;
+    g.add(m);
+  }
+  const ringPivot = new THREE.Group();
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(27, 0.42, 16, 220), glowMat);
+  const sat = new THREE.Mesh(new THREE.SphereGeometry(1.4, 24, 16), glowMat);
+  ringPivot.add(ring); ringPivot.add(sat);
+  ringPivot.rotation.set(1.18, -0.38, 0);
+  g.add(ringPivot);
+  return { g, ringPivot, ring, sat };
+}
+const logo = makeLogo(); scene3.add(logo.g);
+
+// ---------- Téléphone 3D + sections du site ----------
+const phone = new THREE.Group(); scene3.add(phone);
+phone.add(slab(2.75, 5.5, 0.42, 0.18, 0.06, darkMat));
+const screen = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 5.22), new THREE.MeshBasicMaterial({ color: 0xdfe6ee }));
+screen.position.z = 0.16; phone.add(screen);
+const SEC = [ // [hauteur, type]
+  [1.2, "hero"], [0.5, "hours"], [0.68, "reviews"], [0.82, "gallery"], [0.7, "shop"], [0.44, "loyalty"],
+];
+const blocks = []; let yTop = 2.5;
+const box = (w, h, d, mat, r = 0.04) => new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 3, Math.min(r, h / 2, d / 2)), mat);
+SEC.forEach(([h, kind], i) => {
+  const b = new THREE.Group();
+  const w = 2.3;
+  if (kind === "hero") {
+    b.add(box(w, h, 0.07, accentMat, 0.06));
+    [[0.9, 0.3], [0.6, 0.12]].forEach(([ww, yy]) => { const m = box(ww * 1.2, 0.09, 0.03, whiteMat, 0.03); m.position.set(-w / 2 + 0.2 + ww * 0.6, yy, 0.05); b.add(m); });
+    const btn = box(0.62, 0.2, 0.04, whiteMat, 0.06); btn.position.set(-w / 2 + 0.51, -0.28, 0.05); b.add(btn);
+  } else {
+    b.add(box(w, h, 0.05, lightMat, 0.05));
+    if (kind === "gallery") [-0.74, 0, 0.74].forEach(x => { const m = box(0.66, h - 0.16, 0.04, greyMat, 0.05); m.position.set(x, 0, 0.04); b.add(m); });
+    else if (kind === "reviews") { [0, 1, 2, 3, 4].forEach(k => { const s = box(0.13, 0.13, 0.04, accentMat, 0.06); s.position.set(-w / 2 + 0.2 + k * 0.18, 0.14, 0.04); b.add(s); }); const l = box(1.6, 0.06, 0.03, greyMat, 0.03); l.position.set(-w / 2 + 0.95, -0.12, 0.04); b.add(l); }
+    else if (kind === "shop") { const im = box(0.5, 0.5, 0.04, greyMat, 0.05); im.position.set(-w / 2 + 0.35, 0, 0.04); b.add(im); const l = box(0.9, 0.07, 0.03, greyMat, 0.03); l.position.set(0.05, 0.1, 0.04); b.add(l); const bt = box(0.5, 0.2, 0.04, accentMat, 0.06); bt.position.set(w / 2 - 0.38, -0.1, 0.04); b.add(bt); }
+    else if (kind === "hours") { const ic = box(0.26, 0.26, 0.04, accentMat, 0.06); ic.position.set(-w / 2 + 0.25, 0, 0.04); b.add(ic); const l = box(1.2, 0.07, 0.03, greyMat, 0.03); l.position.set(-0.2, 0.05, 0.04); b.add(l); }
+    else if (kind === "loyalty") { for (let k = 0; k < 8; k++) { const s = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.04, 20), k < 5 ? accentMat : greyMat); s.rotation.x = Math.PI / 2; s.position.set(-w / 2 + 0.25 + k * 0.26, 0, 0.04); b.add(s); } }
+  }
+  const slotY = yTop - h / 2; yTop -= h + 0.1;
+  const from = [(i % 2 ? 1 : -1) * (3 + rnd() * 1.5), slotY + (rnd() * 4 - 2), 4 + rnd() * 3, rnd() * 3 - 1.5, rnd() * 3 - 1.5];
+  phone.add(b); blocks.push({ b, slotY, from });
+});
+const SWATCH = [0xe8651f, 0x3f8a5a, 0x8e44ad].map(c => new THREE.Color(c));
+const BLUE = new THREE.Color(0x1b8ce3);
+
+// ---------- Cartes des formules (novytek.fr/formules) ----------
+await Promise.all(['800 80px "Bricolage Grotesque"', '600 30px Figtree', '700 30px Figtree'].map(f => document.fonts.load(f, "Aé€")));
+function cardTex(name, desc, price, badge) {
+  const c = document.createElement("canvas"); c.width = 600; c.height = 852;
+  const g = c.getContext("2d");
+  let y = 110;
+  if (badge) { g.fillStyle = "#1b8ce3"; g.beginPath(); g.roundRect(48, 44, 250, 52, 26); g.fill(); g.fillStyle = "#fff"; g.font = '700 26px Figtree'; g.fillText(badge, 72, 79); y = 190; }
+  g.fillStyle = "#eef4fb"; g.font = '800 78px "Bricolage Grotesque"'; g.fillText(name, 48, y);
+  g.fillStyle = "#9fb3cc"; g.font = '600 32px Figtree';
+  let line = "", ly = y + 64;
+  desc.split(" ").forEach(w => { if (g.measureText(line + w).width > 500) { g.fillText(line, 48, ly); line = ""; ly += 42; } line += w + " "; });
+  g.fillText(line, 48, ly);
+  g.fillStyle = "#ffffff"; g.font = '800 190px "Bricolage Grotesque"'; g.fillText(price, 40, 740);
+  const pw = g.measureText(price).width;
+  g.fillStyle = "#9fb3cc"; g.font = '600 40px Figtree'; g.fillText("/mois", 56 + pw, 740);
+  const tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; tx.anisotropy = 4; return tx;
+}
+const PLANS = [
+  ["Vitrine", "Tout pour présenter votre activité et être trouvé.", "19 €", null, 0x0f2448],
+  ["Boutique", "Tout de la Vitrine, plus la vente en ligne.", "29 €", "Le plus choisi", 0x13427e],
+  ["Personnalisé", "Votre site conçu à la main, de A\u00a0à\u00a0Z.", "69 €", null, 0x0f2448],
+];
+const cards = PLANS.map(([n, d, pr, badge, col]) => {
+  const g = new THREE.Group();
+  g.add(slab(1.9, 2.7, 0.2, 0.05, 0.03, new THREE.MeshPhysicalMaterial({ color: col, metalness: 0.1, roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.05 })));
+  const face = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 2.7), new THREE.MeshBasicMaterial({ map: cardTex(n, d, pr, badge), transparent: true, toneMapped: false }));
+  face.position.z = 0.06; g.add(face);
+  scene3.add(g); return g;
+});
+const CARD_POSE = [[-1.74, py(1000), -0.5, 0.55, 0.76], [0, py(980), 0.6, 0, 0.95], [1.74, py(1000), -0.5, -0.55, 0.76]];
+
+// ---------- Animation ----------
+const tmpC = new THREE.Color();
+function frame3D(t) {
+  // caméra : légère parallaxe
+  camera.position.x = 0.18 * Math.sin(t * 0.45);
+  camera.position.y = 0.1 * Math.sin(t * 0.3);
+  camera.lookAt(0, 0, 0);
+  halo.position.x = 1.2 * Math.sin(t * 0.5); halo.position.y = 2.5 * Math.sin(t * 0.33) + 1;
+  STR.forEach(([m, sp], i) => { m.position.x = ((t * 1.3 * sp + i * 1.7) % 14) - 7; });
+  for (let i = 0; i < NP; i++) {
+    const [x, y, z0, v] = pBase[i];
+    let z = z0 + t * v * (t < 1.2 ? 3 : 1);
+    z = ((z + 12) % 16 + 16) % 16 - 12;
+    pPos[i * 3] = x; pPos[i * 3 + 1] = y; pPos[i * 3 + 2] = z;
+  }
+  pGeo.attributes.position.needsUpdate = true;
+
+  // Logo : scène 1 puis carton de fin
+  const endOn = t >= END;
+  const inS1 = t < 3.45;
+  logo.g.visible = inS1 || endOn;
+  if (inS1) {
+    const k = eOut(p(t, 0, 1.1));
+    const s = 0.078 * lerp(0.35, 1, k);
+    logo.g.scale.setScalar(s);
+    logo.g.position.set(0, lerp(py(700) + 0.6, py(700), k), lerp(-14, 0, k) + 3.5 * eIn(p(t, 3.0, 3.4)));
+    logo.g.rotation.set(0.12 * Math.sin(t * 0.8) + lerp(0.9, 0, k), lerp(-4.4, 0.35, k) + 0.18 * Math.sin(t * 1.2) * p(t, 1.1, 1.8), 0);
+    const rk = eBack(p(t, 0.5, 1.3));
+    logo.ringPivot.scale.setScalar(Math.max(0.001, rk));
+  } else if (endOn) {
+    const b = END + 0.15, k = eBack(p(t, b, b + 0.8));
+    logo.g.scale.setScalar(0.045 * Math.max(0.001, k));
+    logo.g.position.set(0, py(650), 0);
+    logo.g.rotation.set(0.1 * Math.sin(t * 0.9), lerp(-3.2, 0, eOut(p(t, b, b + 1.0))) + 0.3 * Math.sin((t - b) * 1.1), 0);
+    logo.ringPivot.scale.setScalar(Math.max(0.001, eBack(p(t, b + 0.4, b + 1.1))));
+  }
+  logo.ring.rotation.z = t * 0.9;
+  const a = t * 2.2; logo.sat.position.set(27 * Math.cos(a), 27 * Math.sin(a), 0);
+  // reflet qui balaie le logo
+  const gl1 = p(t, 1.0, 2.3), gl2 = p(t, END + 1.2, END + 2.4);
+  glint.intensity = 0;
+  if (gl1 > 0 && gl1 < 1) { glint.intensity = 25 * Math.sin(Math.PI * gl1); glint.position.set(lerp(-4, 4, gl1), py(700) + 1.5, 3); }
+  if (gl2 > 0 && gl2 < 1) { glint.intensity = 22 * Math.sin(Math.PI * gl2); glint.position.set(lerp(-4, 4, gl2), py(650) + 1.2, 3); }
+
+  // Téléphone
+  const inS2 = t >= 3.4 && t < 7.75;
+  phone.visible = inS2;
+  if (inS2) {
+    const k = eOut(p(t, 3.45, 4.1)), o = eIn(p(t, 7.35, 7.7));
+    phone.scale.setScalar(0.88);
+    phone.position.set(0.3, py(1110) + lerp(-3, 0, k) + 0.08 * Math.sin(t * 1.6) + 3 * o, lerp(-3, 0, k) + 2 * o);
+    phone.rotation.set(0.14 + 0.03 * Math.sin(t), lerp(-1.2, -0.32, k) + 0.08 * Math.sin(t * 0.7), 0.04);
+    blocks.forEach(({ b, slotY, from }, i) => {
+      const bk = p(t, BLOCK_T(i), BLOCK_T(i) + 0.5), e = eBack(bk);
+      b.visible = bk > 0;
+      b.position.set(lerp(from[0], 0, e), lerp(from[1], slotY, e), lerp(from[2], 0.22, eOut(bk)));
+      b.rotation.set(lerp(from[3], 0, eOut(bk)), lerp(from[4], 0, eOut(bk)), 0);
+    });
+    tmpC.copy(BLUE);
+    COLORS_T.forEach((x, k) => { const c = eOut(p(t, x, x + 0.25)); if (c > 0) tmpC.lerp(SWATCH[k], c); });
+    accentMat.color.copy(tmpC);
+  }
+
+  // Cartes
+  const inS3 = t >= 7.7 && t < 11.65;
+  cards.forEach((g, i) => {
+    g.visible = inS3;
+    if (!inS3) return;
+    const [x, y, z, ry, s] = CARD_POSE[i];
+    const k = p(t, CARD_T[i], CARD_T[i] + 0.7), e = eBack(k), o = eIn(p(t, 11.25, 11.6));
+    g.position.set(lerp(0, x, eOut(k)), lerp(y - 4, y, e) + 0.06 * Math.sin(t * 1.5 + i) + 4 * o, lerp(-4, z, eOut(k)));
+    g.rotation.set(lerp(-0.9, 0, eOut(k)) + 0.03 * Math.sin(t + i), lerp(ry * 2.4, ry, eOut(k)) + 0.05 * Math.sin(t * 0.8 + i), 0);
+    g.scale.setScalar(s * (i === 1 ? 1 + 0.02 * Math.sin((t - 8.6) * 3) * p(t, 8.6, 8.8) : 1));
+  });
+
+  composer.render();
+}
+
+window.renderFrame = t => { overlayFrame(t); frame3D(t); };
+window.renderFrame(0);
+window.READY = true;
+</script>
+</body>
+</html>
