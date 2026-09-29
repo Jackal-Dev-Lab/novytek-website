@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Carte de visite NovyTek – recto</title>
+<link href="../fonts.css" rel="stylesheet">
+<link href="print.css" rel="stylesheet">
+<style>
+  /* Vistaprint, format standard 85 × 55 mm : fichier 88 × 58 mm (fond perdu), zone de sécurité 82 × 52 mm */
+  @page { size: 88mm 58mm; margin: 0; }
+  .page { width: 88mm; height: 58mm; background: radial-gradient(110% 120% at 85% 0%, #14428a 0%, var(--bg) 62%); }
+  .abs { position: absolute; }
+  .logo { left: 0; right: 0; top: 17mm; justify-content: center; gap: 2.4mm; }
+  .logo svg { width: 11mm; height: 11mm; }
+  .logo .word { font-size: 9.6mm; }
+  .tag { left: 0; right: 0; top: 32.5mm; text-align: center; font-size: 3.5mm; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="stripe" style="top:12mm"></div>
+  <div class="stripe" style="top:44mm"></div>
+  <div class="abs logo">
+    <svg viewBox="0 0 34 34"><rect width="34" height="34" rx="10" fill="#1b8ce3"/><path d="M10 24V10l14 14V10" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="word">novytek</span>
+  </div>
+  <div class="abs tag">Votre site web, <span class="hl">à vous.</span></div>
+</div>
+</body>
+</html>

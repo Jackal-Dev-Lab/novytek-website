@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Affiche NovyTek A4 paysage</title>
+<link href="../fonts.css" rel="stylesheet">
+<link href="print.css" rel="stylesheet">
+<style>
+  /* A4 paysage (297 × 210 mm) + 3 mm de fond perdu = 303 × 216 mm */
+  @page { size: 303mm 216mm; margin: 0; }
+  .page { width: 303mm; height: 216mm; background: radial-gradient(90% 90% at 95% 0%, #123a78 0%, var(--bg) 60%); }
+  .abs { position: absolute; }
+  .logo { left: 15mm; top: 15mm; gap: 3mm; }
+  .logo svg { width: 13mm; height: 13mm; }
+  .logo .word { font-size: 11mm; }
+  .eyebrow { left: 15mm; top: 42mm; font-size: 3.4mm; font-weight: 700; letter-spacing: 0.8mm; color: var(--sky); text-transform: uppercase; }
+  h1 { left: 15mm; width: 150mm; top: 48mm; font-size: 15.5mm; line-height: 1.03; font-weight: 800; letter-spacing: -0.035em; }
+  .sub { left: 15mm; width: 148mm; top: 104mm; font-size: 5.2mm; font-weight: 500; line-height: 1.35; }
+  .sub b { color: var(--text); font-weight: 700; }
+  .chips { left: 15mm; width: 150mm; top: 130mm; gap: 2.5mm; }
+  .chip { font-size: 3.4mm; padding: 1.7mm 3.3mm; gap: 1.5mm; }
+  .plans { left: 175mm; right: 15mm; top: 15mm; display: grid; gap: 5mm; }
+  .plan { height: 33mm; padding: 5mm 6mm; display: flex; align-items: center; justify-content: space-between; gap: 4mm; }
+  .plan h3 { font-size: 6mm; }
+  .plan p { font-size: 3.1mm; color: var(--muted); margin-top: 1mm; line-height: 1.3; max-width: 58mm; }
+  .plan .price { font-size: 12mm; white-space: nowrap; }
+  .plan .price small { font-size: 3.4mm; }
+  .badge { top: -2.8mm; right: 5mm; font-size: 2.8mm; padding: 0.9mm 2.8mm; }
+  .qr { left: 175mm; top: 136mm; width: 36mm; height: 36mm; padding: 3mm; }
+  .cta-block { left: 217mm; top: 139mm; }
+  .cta-block .l1 { font-size: 4.4mm; font-weight: 600; color: var(--muted); }
+  .cta-block .url { font-family: "Bricolage Grotesque"; font-size: 12mm; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  .cta-block .mail { font-size: 3.7mm; font-weight: 600; margin-top: 1.5mm; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="stripe" style="top:35mm; right:140mm"></div>
+  <div class="stripe" style="top:128mm; left:160mm"></div>
+  <div class="stripe" style="top:190mm"></div>
+
+  <div class="abs logo">
+    <svg viewBox="0 0 34 34"><rect width="34" height="34" rx="10" fill="#1b8ce3"/><path d="M10 24V10l14 14V10" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="word">novytek</span>
+  </div>
+  <div class="abs eyebrow">Votre site web, à vous</div>
+  <h1 class="abs bric">Le site de votre entreprise, que vous <span class="hl">tenez vous-même.</span></h1>
+  <div class="abs sub muted">À partir de <b>19&nbsp;€ par mois</b>, hébergement compris.<br>Vous le composez section par section, sans une ligne de code.</div>
+  <div class="abs chips" id="chips"></div>
+
+  <div class="abs plans">
+    <div class="plan"><div><h3>Vitrine</h3><p>Tout pour présenter votre activité et être trouvé.</p></div><div class="price">19&nbsp;€<small> /mois</small></div></div>
+    <div class="plan pop"><span class="badge">Le plus choisi</span><div><h3>Boutique</h3><p>Tout de la Vitrine, plus la vente en ligne.</p></div><div class="price">29&nbsp;€<small> /mois</small></div></div>
+    <div class="plan"><div><h3>Personnalisé</h3><p>Votre site conçu à la main, de A&nbsp;à&nbsp;Z.</p></div><div class="price">69&nbsp;€<small> /mois</small></div></div>
+  </div>
+
+  <div class="abs qr"><img src="qr.svg" alt="QR code vers novytek.fr"></div>
+  <div class="abs cta-block">
+    <div class="l1">Composez votre site sur</div>
+    <div class="url">novytek.fr</div>
+    <div class="mail">novytek.pro@gmail.com</div>
+  </div>
+</div>
+<script>
+const check = '<svg width="4mm" height="4mm" viewBox="0 0 24 24" fill="none" stroke="#7cc6fb" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>';
+document.getElementById("chips").innerHTML = ["Sans frais de création", "Sans engagement", "Hébergé en France", "Certificat HTTPS"].map(c => `<span class="chip">${check}${c}</span>`).join("");
+</script>
+</body>
+</html>

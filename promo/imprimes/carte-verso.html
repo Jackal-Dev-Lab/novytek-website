@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Carte de visite NovyTek – verso</title>
+<link href="../fonts.css" rel="stylesheet">
+<link href="print.css" rel="stylesheet">
+<style>
+  /* Vistaprint, format standard 85 × 55 mm : fichier 88 × 58 mm (fond perdu), zone de sécurité 82 × 52 mm */
+  @page { size: 88mm 58mm; margin: 0; }
+  .page { width: 88mm; height: 58mm; }
+  .abs { position: absolute; }
+  .eyebrow { left: 7mm; top: 8mm; font-size: 2.3mm; font-weight: 700; letter-spacing: 0.45mm; color: var(--sky); text-transform: uppercase; }
+  .offer { left: 7mm; top: 12.5mm; font-family: "Bricolage Grotesque"; font-weight: 800; font-size: 4.9mm; letter-spacing: -0.03em; line-height: 1.1; }
+  .pts { left: 7mm; top: 25mm; font-size: 2.6mm; font-weight: 600; line-height: 1.55; color: var(--muted); }
+  .url { left: 7mm; top: 40mm; font-family: "Bricolage Grotesque"; font-weight: 800; font-size: 5.4mm; letter-spacing: -0.03em; }
+  .mail { left: 7mm; top: 46.5mm; font-size: 2.7mm; font-weight: 600; }
+  .qr { left: 60mm; top: 25.5mm; width: 21mm; height: 21mm; padding: 2mm; border-radius: 2.2mm; }
+  .scan { left: 60mm; width: 21mm; top: 47.5mm; text-align: center; font-size: 2.3mm; font-weight: 600; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="abs eyebrow">Sites web par abonnement</div>
+  <div class="abs offer">Dès 19&nbsp;€/mois,<br><span class="hl">hébergement compris.</span></div>
+  <div class="abs pts">✓ Sans frais de création<br>✓ Sans engagement<br>✓ Hébergé en France</div>
+  <div class="abs url">novytek.fr</div>
+  <div class="abs mail">novytek.pro@gmail.com</div>
+  <div class="abs qr"><img src="qr.svg" alt="QR code vers novytek.fr"></div>
+  <div class="abs scan">Scannez-moi</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Affiche NovyTek A4 portrait</title>
+<link href="../fonts.css" rel="stylesheet">
+<link href="print.css" rel="stylesheet">
+<style>
+  /* A4 (210 × 297 mm) + 3 mm de fond perdu de chaque côté = 216 × 303 mm */
+  @page { size: 216mm 303mm; margin: 0; }
+  .page { width: 216mm; height: 303mm; }
+  .abs { position: absolute; }
+  .logo { left: 15mm; top: 17mm; gap: 3.5mm; }
+  .logo svg { width: 15mm; height: 15mm; }
+  .logo .word { font-size: 12.5mm; }
+  .eyebrow { left: 15mm; top: 48mm; font-size: 3.6mm; font-weight: 700; letter-spacing: 0.9mm; color: var(--sky); text-transform: uppercase; }
+  h1 { left: 15mm; right: 15mm; top: 55mm; font-size: 19.5mm; line-height: 1.02; font-weight: 800; letter-spacing: -0.035em; }
+  .sub { left: 15mm; right: 15mm; top: 124mm; font-size: 6.2mm; font-weight: 500; line-height: 1.3; }
+  .sub b { color: var(--text); font-weight: 700; }
+  .plans { left: 15mm; right: 15mm; top: 163mm; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5mm; }
+  .plan { height: 60mm; padding: 6mm 5mm; display: flex; flex-direction: column; }
+  .plan h3 { font-size: 6.4mm; }
+  .plan p { font-size: 3.3mm; color: var(--muted); margin-top: 1.5mm; line-height: 1.3; }
+  .plan .price { margin-top: auto; font-size: 13mm; }
+  .plan .price small { font-size: 3.6mm; }
+  .badge { top: -3mm; right: 4mm; font-size: 2.9mm; padding: 1mm 3mm; }
+  .chips { left: 15mm; right: 15mm; top: 231mm; gap: 2.5mm; }
+  .chip { font-size: 3.5mm; padding: 1.8mm 3.5mm; gap: 1.6mm; }
+  .qr { left: 15mm; top: 250mm; width: 36mm; height: 36mm; padding: 3mm; }
+  .cta-block { left: 58mm; top: 251mm; }
+  .cta-block .l1 { font-size: 5.2mm; font-weight: 600; color: var(--muted); }
+  .cta-block .url { font-family: "Bricolage Grotesque"; font-size: 14mm; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  .cta-block .mail { font-size: 4.2mm; font-weight: 600; margin-top: 1.5mm; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="stripe" style="top:40mm"></div>
+  <div class="stripe" style="top:151mm"></div>
+  <div class="stripe" style="top:243mm"></div>
+
+  <div class="abs logo">
+    <svg viewBox="0 0 34 34"><rect width="34" height="34" rx="10" fill="#1b8ce3"/><path d="M10 24V10l14 14V10" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="word">novytek</span>
+  </div>
+
+  <div class="abs eyebrow">Votre site web, à vous</div>
+  <h1 class="abs bric">Le site de votre entreprise, que vous <span class="hl">tenez vous-même.</span></h1>
+  <div class="abs sub muted">À partir de <b>19&nbsp;€ par mois</b>, hébergement compris.<br>Vous le composez section par section, sans une ligne de code.</div>
+
+  <div class="abs plans">
+    <div class="plan"><h3>Vitrine</h3><p>Tout pour présenter votre activité et être trouvé.</p><div class="price">19&nbsp;€<small> /mois</small></div></div>
+    <div class="plan pop"><span class="badge">Le plus choisi</span><h3>Boutique</h3><p>Tout de la Vitrine, plus la vente en ligne.</p><div class="price">29&nbsp;€<small> /mois</small></div></div>
+    <div class="plan"><h3>Personnalisé</h3><p>Votre site conçu à la main, de A&nbsp;à&nbsp;Z.</p><div class="price">69&nbsp;€<small> /mois</small></div></div>
+  </div>
+
+  <div class="abs chips" id="chips"></div>
+
+  <div class="abs qr"><img src="qr.svg" alt="QR code vers novytek.fr"></div>
+  <div class="abs cta-block">
+    <div class="l1">Composez votre site sur</div>
+    <div class="url">novytek.fr</div>
+    <div class="mail">novytek.pro@gmail.com</div>
+  </div>
+</div>
+<script>
+const check = '<svg width="4.2mm" height="4.2mm" viewBox="0 0 24 24" fill="none" stroke="#7cc6fb" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>';
+document.getElementById("chips").innerHTML = ["Sans frais de création", "Sans engagement", "Hébergé en France", "Certificat HTTPS"].map(c => `<span class="chip">${check}${c}</span>`).join("");
+</script>
+</body>
+</html>
