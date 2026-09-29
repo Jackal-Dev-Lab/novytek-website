@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Abonnement Antoine Nah – 3D fond transparent</title>
+<link href="../fonts.css" rel="stylesheet">
+<script type="importmap">{ "imports": { "three": "../variantes/3d/three.module.min.js" } }</script>
+<style>
+  /* Fond transparent : la vidéo est exportée avec couche alpha (ProRes 4444) */
+  html, body { margin: 0; overflow: hidden; background: transparent; }
+  #gl { display: block; }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<script>window.READY = false;</script>
+<script src="icons.js"></script>
+<script type="module">
+import * as THREE from "three";
+import { RoomEnvironment } from "../variantes/3d/jsm/environments/RoomEnvironment.js";
+
+const W = innerWidth, H = innerHeight;
+window.DURATION = 6.5;
+
+// ---------- Outils ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const p = (t, a, b) => clamp((t - a) / (b - a));
+const eOut = x => 1 - Math.pow(1 - x, 3);
+const eIn = x => x * x * x;
+const eIO = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const eBack = x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+
+// ---------- Timeline (s) ----------
+const SPIN1 = [0.0, 1.45];   // arrivée en tournant (1 tour et demi)
+const TAP_SUB = 2.35;        // appui sur « S'abonner »
+const TAP_BELL = 2.95;       // appui sur « Abonné » (menu des notifications)
+const TAP_ALL = 3.55;        // appui sur « Toutes »
+const SPIN2 = [4.75, 5.75];  // tour complet final
+window.SFX = [
+  { type: "whoosh", t: 0.0, dur: 1.2, gain: -8 },
+  { type: "whoosh", t: 0.55, dur: 0.8, gain: -12, pan: 0.4 },
+  { type: "thud", t: 1.42, f: 80, gain: -9 },
+  { type: "pop", t: 1.5, f: 880, gain: -12 },
+  { type: "click", t: TAP_SUB, f: 2600, gain: -10 },
+  { type: "pop", t: TAP_SUB + 0.06, f: 659.25, gain: -9 },
+  { type: "blip", t: TAP_SUB + 0.14, f: 1318.5, gain: -13 },
+  { type: "click", t: TAP_BELL, f: 2600, gain: -10 },
+  { type: "whoosh", t: TAP_BELL + 0.05, dur: 0.3, gain: -22 },
+  { type: "click", t: TAP_ALL, f: 2600, gain: -10 },
+  { type: "bell", t: TAP_ALL + 0.15, f: 1567.98, dur: 1.4, gain: -9 },
+  { type: "bell", t: TAP_ALL + 0.35, f: 2093.0, dur: 1.2, gain: -15, pan: 0.3 },
+  { type: "whoosh", t: SPIN2[0] - 0.05, dur: 1.1, gain: -8, pan: -0.3 },
+  { type: "whoosh", t: SPIN2[0] + 0.35, dur: 0.7, gain: -12, pan: 0.4 },
+  { type: "pop", t: SPIN2[1] - 0.02, f: 987.77, gain: -11 },
+  { type: "blip", t: SPIN2[1] + 0.08, f: 1975.5, gain: -16 },
+];
+window.DURATION_SFX = window.DURATION;
+
+// ---------- Moteur (fond transparent) ----------
+const canvas = document.getElementById("gl");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H);
+renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.55;
+const camera = new THREE.PerspectiveCamera(30, W / H, 0.1, 200);
+camera.position.set(0, 0, 36);
+const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-6, 8, 12); scene.add(key);
+const rim = new THREE.DirectionalLight(0xffffff, 1.0); rim.position.set(8, -2, -6); scene.add(rim);
+
+// ---------- Géométrie ----------
+function roundedRect(w, h, r) {
+  const s = new THREE.Shape(), x = -w / 2, y = -h / 2;
+  s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+  s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r);
+  s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+  return s;
+}
+function slab(w, h, r, depth, bevel, mat) {
+  const g = new THREE.ExtrudeGeometry(roundedRect(w, h, r), { depth, bevelEnabled: bevel > 0, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 6, curveSegments: 24 });
+  g.center(); return new THREE.Mesh(g, mat);
+}
+function flatRounded(w, h, r, mat) {
+  const g = new THREE.ShapeGeometry(roundedRect(w, h, r), 24);
+  const pos = g.attributes.position, uv = g.attributes.uv;
+  for (let i = 0; i < pos.count; i++) uv.setXY(i, pos.getX(i) / w + 0.5, pos.getY(i) / h + 0.5);
+  return new THREE.Mesh(g, mat);
+}
+
+// ---------- Téléphone (inspiré d'un iPhone Pro Max récent, cadre orange) ----------
+const PW = 7.8, PH = 16.3, PD = 0.82, PR = 1.35;
+const phone = new THREE.Group(); scene.add(phone);
+const frameMat = new THREE.MeshPhysicalMaterial({ color: 0xd9692a, metalness: 0.75, roughness: 0.32, clearcoat: 0.4 });
+const backMat = new THREE.MeshPhysicalMaterial({ color: 0xe0773a, metalness: 0.35, roughness: 0.45, clearcoat: 0.6 });
+const glassBlack = new THREE.MeshPhysicalMaterial({ color: 0x050505, metalness: 0.1, roughness: 0.08, clearcoat: 1 });
+const lensGlass = new THREE.MeshPhysicalMaterial({ color: 0x0b0f1a, metalness: 0.4, roughness: 0.05, clearcoat: 1 });
+const ringMat = new THREE.MeshPhysicalMaterial({ color: 0xc4602a, metalness: 0.9, roughness: 0.25 });
+phone.add(slab(PW, PH, PR, PD, 0.07, frameMat));
+// face avant : verre noir + écran
+const frontGlass = slab(PW - 0.12, PH - 0.12, PR - 0.06, 0.02, 0, glassBlack); frontGlass.position.z = PD / 2 + 0.08; phone.add(frontGlass);
+const SW = PW - 0.44, SH = PH - 0.44;
+const scr = document.createElement("canvas"); scr.width = 860; scr.height = Math.round(860 * SH / SW);
+const scrTex = new THREE.CanvasTexture(scr); scrTex.colorSpace = THREE.SRGBColorSpace; scrTex.anisotropy = 8;
+const screen = flatRounded(SW, SH, PR - 0.24, new THREE.MeshBasicMaterial({ map: scrTex, toneMapped: false }));
+screen.position.z = PD / 2 + 0.1; phone.add(screen);
+// dos : verre orange + îlot photo sur toute la largeur
+const back = slab(PW - 0.12, PH - 0.12, PR - 0.06, 0.02, 0, backMat); back.position.z = -(PD / 2 + 0.08); phone.add(back);
+const plateau = slab(PW - 0.5, 3.9, 1.0, 0.2, 0.08, frameMat); plateau.position.set(0, PH / 2 - 2.35, -(PD / 2 + 0.25)); phone.add(plateau);
+[[-2.35, 5.85], [-0.95, 5.2], [-2.35, 4.55]].forEach(([x, y]) => {
+  const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.76, 0.22, 48), ringMat); ring.rotation.x = Math.PI / 2; ring.position.set(x + 0.35, y, -(PD / 2 + 0.47)); phone.add(ring);
+  const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.24, 48), lensGlass); lens.rotation.x = Math.PI / 2; lens.position.set(x + 0.35, y, -(PD / 2 + 0.5)); phone.add(lens);
+});
+const flash = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.1, 32), new THREE.MeshStandardMaterial({ color: 0xf2e6c9, roughness: 0.3 })); flash.rotation.x = Math.PI / 2; flash.position.set(2.4, 6.1, -(PD / 2 + 0.4)); phone.add(flash);
+const lidar = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.1, 32), lensGlass); lidar.rotation.x = Math.PI / 2; lidar.position.set(2.4, 4.7, -(PD / 2 + 0.4)); phone.add(lidar);
+// boutons latéraux
+[[PW / 2 + 0.05, 3.2, 1.9], [-PW / 2 - 0.05, 4.6, 0.8], [-PW / 2 - 0.05, 2.9, 1.3], [-PW / 2 - 0.05, 1.3, 1.3], [PW / 2 + 0.05, -1.0, 1.4]].forEach(([x, y, h]) => {
+  const b = new THREE.Mesh(new THREE.CapsuleGeometry(0.1, h, 6, 12), frameMat); b.position.set(x, y, 0); phone.add(b);
+});
+
+// ---------- Effets de rotation ----------
+const white = new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false });
+const arcs = [];
+[[11.2, 0.13, 1.4, 0.35, 0.0], [12.6, 0.09, 1.0, -0.25, 2.1], [10.2, 0.08, 0.8, 0.15, 4.0], [13.4, 0.07, 0.7, -0.45, 1.0], [11.8, 0.1, 1.1, 0.55, 3.2]].forEach(([r, tube, len, tilt, off]) => {
+  const pivot = new THREE.Group(); pivot.rotation.x = tilt; scene.add(pivot);
+  const m = new THREE.Mesh(new THREE.TorusGeometry(r, tube, 8, 64, len), white); m.rotation.x = Math.PI / 2; pivot.add(m);
+  arcs.push({ pivot, m, off });
+});
+function star() {
+  const s = new THREE.Shape(); const R = 0.7, r = 0.14;
+  for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, rr = i % 2 ? r : R; const x = Math.sin(a) * rr, y = Math.cos(a) * rr; i ? s.lineTo(x, y) : s.moveTo(x, y); }
+  return new THREE.ShapeGeometry(s);
+}
+const starGeo = star();
+const bursts = [1.45, SPIN2[1]].map(t0 => {
+  const g = new THREE.Group(); scene.add(g);
+  const items = Array.from({ length: 10 }, (_, i) => { const m = new THREE.Mesh(starGeo, white); g.add(m); const a = i / 10 * Math.PI * 2 + 0.3; return { m, a, d: 9 + (i % 3) * 1.6, s: 0.7 + (i % 4) * 0.25 }; });
+  return { g, items, t0 };
+});
+// Lignes de vitesse verticales derrière le téléphone
+const lines = Array.from({ length: 8 }, (_, i) => { const m = new THREE.Mesh(new THREE.BoxGeometry(0.1, 5 + (i % 3) * 2, 0.02), white); m.position.z = -4; scene.add(m); return { m, x: (i - 3.5) * 2.4 + (i % 2) * 0.7, y: ((i * 37) % 9) - 4.5 }; });
+
+// ---------- Écran : page de la chaîne ----------
+await Promise.all(['700 40px Figtree', '600 30px Figtree', '500 30px Figtree'].map(f => document.fonts.load(f, "Aé")));
+const avatar = new Image(); avatar.src = "avatar.png"; await avatar.decode();
+const g = scr.getContext("2d"), SWp = scr.width, SHp = scr.height;
+const icon = (name, x, y, size, color, lw = 2) => { g.save(); g.translate(x, y); g.scale(size / 24, size / 24); g.strokeStyle = color; g.lineWidth = lw; g.lineCap = "round"; g.lineJoin = "round"; g.stroke(new Path2D(IC[name])); g.restore(); };
+const rr = (x, y, w, h, r, fill) => { g.fillStyle = fill; g.beginPath(); g.roundRect(x, y, w, h, r); g.fill(); };
+const SUB_BTN = { x: 40, y: 760, w: 780, h: 96 };
+const ROWS = ["Toutes", "Personnalisées", "Aucune", "Se désabonner"];
+const SHEET_H = 620;
+function drawScreen(t) {
+  const subbed = t >= TAP_SUB + 0.05, notif = t >= TAP_ALL + 0.1;
+  g.fillStyle = "#0f0f0f"; g.fillRect(0, 0, SWp, SHp);
+  // barre d'état + Dynamic Island
+  g.fillStyle = "#fff"; g.font = "700 38px Figtree"; g.fillText("9:41", 70, 88);
+  rr(SWp / 2 - 125, 34, 250, 74, 37, "#000");
+  [0, 1, 2, 3].forEach(i => rr(SWp - 190 + i * 16, 82 - i * 8, 10, 12 + i * 8, 3, "#fff"));
+  rr(SWp - 110, 62, 58, 30, 9, "#fff"); rr(SWp - 50, 70, 5, 14, 2, "#fff");
+  // barre du haut
+  icon("arrow-left", 44, 150, 50, "#fff", 2.2); icon("search", SWp - 190, 150, 48, "#fff", 2.2); icon("ellipsis-vertical", SWp - 100, 150, 48, "#fff", 2.2);
+  // bannière (couleurs du coucher de soleil de l'avatar)
+  const gr = g.createLinearGradient(0, 230, 0, 420); gr.addColorStop(0, "#f2b8a0"); gr.addColorStop(0.45, "#b9a7c9"); gr.addColorStop(1, "#2c4a73");
+  g.fillStyle = gr; g.beginPath(); g.roundRect(40, 230, SWp - 80, 190, 24); g.fill();
+  // avatar
+  g.save(); g.beginPath(); g.arc(150, 560, 100, 0, Math.PI * 2); g.clip();
+  g.drawImage(avatar, 163 - 146, 160 - 146, 292, 292, 50, 460, 200, 200); g.restore();
+  g.fillStyle = "#fff"; g.font = "700 54px Figtree"; g.fillText("Antoine Nah", 280, 540);
+  g.fillStyle = "#aaaaaa"; g.font = "500 29px Figtree";
+  const subs = subbed ? "331" : "330";
+  g.fillText(`@Antoinenah · ${subs} abonnés · 149 vidéos`, 280, 592);
+  g.fillText("Ici je ferais des vidéos de voyage. Du contenu", 40, 690);
+  const l2 = "vlog et d'autre. Je vous emmène avec moi";
+  g.fillText(l2, 40, 730); const l2w = g.measureText(l2).width;
+  g.fillStyle = "#fff"; g.font = "700 29px Figtree"; g.fillText(" …plus", 40 + l2w, 730);
+  // bouton
+  const b = SUB_BTN;
+  const press = Math.max(0, 1 - Math.abs(t - TAP_SUB) / 0.12) + Math.max(0, 1 - Math.abs(t - TAP_BELL) / 0.12);
+  const sc = 1 - 0.04 * press;
+  g.save(); g.translate(b.x + b.w / 2, b.y + b.h / 2); g.scale(sc, sc); g.translate(-(b.x + b.w / 2), -(b.y + b.h / 2));
+  if (!subbed) {
+    rr(b.x, b.y, b.w, b.h, 48, "#f1f1f1");
+    g.fillStyle = "#0f0f0f"; g.font = "700 36px Figtree"; g.textAlign = "center"; g.fillText("S'abonner", b.x + b.w / 2, b.y + 61); g.textAlign = "left";
+  } else {
+    rr(b.x, b.y, b.w, b.h, 48, "#272727");
+    const ringing = notif && t < TAP_ALL + 1.4;
+    const wig = ringing ? Math.sin((t - TAP_ALL) * 40) * 0.35 * (1 - p(t, TAP_ALL, TAP_ALL + 1.4)) : 0;
+    g.save(); g.translate(b.x + b.w / 2 - 110, b.y + b.h / 2); g.rotate(wig);
+    icon(notif ? "bell-ring" : "bell", -22, -22, 44, "#fff", 2.2); g.restore();
+    g.fillStyle = "#fff"; g.font = "700 36px Figtree"; g.fillText("Abonné", b.x + b.w / 2 - 70, b.y + 61);
+    icon("chevron-down", b.x + b.w / 2 + 70, b.y + 28, 40, "#fff", 2.4);
+  }
+  g.restore();
+  // onglets
+  g.font = "700 32px Figtree";
+  ["Accueil", "Vidéos", "Shorts", "Playlists"].forEach((s, i) => { g.fillStyle = i === 1 ? "#fff" : "#aaaaaa"; g.fillText(s, 40 + i * 190, 950); });
+  rr(230, 972, 110, 5, 3, "#fff"); rr(0, 980, SWp, 2, 0, "#272727");
+  // vignettes vidéo (illustration)
+  [[1010, ["#27496d", "#e98a5b"]], [1500, ["#1d3b2f", "#89b6a5"]]].forEach(([y, [c1, c2]]) => {
+    const vg = g.createLinearGradient(40, y, SWp - 40, y + 400); vg.addColorStop(0, c1); vg.addColorStop(1, c2);
+    g.fillStyle = vg; g.beginPath(); g.roundRect(40, y, SWp - 80, 400, 22); g.fill();
+    rr(SWp - 150, y + 350, 90, 36, 8, "rgba(0,0,0,.8)");
+    rr(40, y + 424, 520, 26, 8, "#3a3a3a"); rr(40, y + 464, 320, 22, 8, "#272727");
+  });
+  // menu des notifications
+  const open = eOut(p(t, TAP_BELL + 0.05, TAP_BELL + 0.35)) * (1 - eIn(p(t, TAP_ALL + 0.1, TAP_ALL + 0.35)));
+  if (open > 0) {
+    g.fillStyle = `rgba(0,0,0,${0.55 * open})`; g.fillRect(0, 0, SWp, SHp);
+    const y0 = SHp - SHEET_H * open;
+    rr(0, y0, SWp, SHEET_H + 40, 36, "#212121"); rr(SWp / 2 - 40, y0 + 20, 80, 8, 4, "#555");
+    g.fillStyle = "#fff"; g.font = "700 34px Figtree"; g.fillText("Notifications", 48, y0 + 100);
+    ROWS.forEach((s, i) => {
+      const ry = y0 + 140 + i * 110;
+      if (i === 0 && t >= TAP_ALL - 0.05) rr(20, ry, SWp - 40, 100, 20, "#3a3a3a");
+      icon(["bell-ring", "bell", "bell-off", "user-minus"][i], 50, ry + 28, 44, "#fff", 2.2);
+      g.fillStyle = "#fff"; g.font = "600 34px Figtree"; g.fillText(s, 130, ry + 64);
+      if (i === 0 && t >= TAP_ALL) icon("check", SWp - 110, ry + 28, 44, "#3ea6ff", 3);
+    });
+  }
+  // message de confirmation
+  const toast = eOut(p(t, TAP_ALL + 0.3, TAP_ALL + 0.55)) * (1 - eIn(p(t, TAP_ALL + 1.8, TAP_ALL + 2.1)));
+  if (toast > 0) {
+    const ty = SHp - 170 + (1 - toast) * 120;
+    g.globalAlpha = toast; rr(40, ty, SWp - 80, 100, 18, "#f1f1f1");
+    icon("bell-ring", 76, ty + 28, 44, "#0f0f0f", 2.2);
+    g.fillStyle = "#0f0f0f"; g.font = "600 32px Figtree"; g.fillText("Notifications activées", 150, ty + 62); g.globalAlpha = 1;
+  }
+  // doigt : pastille qui se déplace vers chaque bouton et appuie
+  const pts = [[1.9, SWp / 2 + 120, SHp - 300], [TAP_SUB, b.x + b.w / 2, b.y + b.h / 2], [TAP_BELL, b.x + b.w / 2 + 40, b.y + b.h / 2], [TAP_ALL, SWp / 2, SHp - SHEET_H + 190], [TAP_ALL + 0.5, SWp / 2 + 160, SHp - 380]];
+  if (t >= pts[0][0] - 0.2 && t < TAP_ALL + 0.55) {
+    let x = pts[0][1], y = pts[0][2], tb = 0;
+    for (let i = 0; i < pts.length - 1; i++) { const [ta, xa, ya] = pts[i], [tbb, xb, yb] = pts[i + 1]; if (t >= ta && t <= tbb) { const k = eIO(p(t, ta + 0.05, tbb - 0.08)); x = lerp(xa, xb, k); y = lerp(ya, yb, k); tb = tbb; } }
+    const fade = clamp((t - (pts[0][0] - 0.2)) / 0.2) * (1 - p(t, TAP_ALL + 0.35, TAP_ALL + 0.55));
+    const pr = [TAP_SUB, TAP_BELL, TAP_ALL].reduce((m, tp) => Math.max(m, 1 - Math.abs(t - tp) / 0.1), 0);
+    g.globalAlpha = fade;
+    [TAP_SUB, TAP_BELL, TAP_ALL].forEach(tp => { const k = p(t, tp, tp + 0.4); if (k > 0 && k < 1) { g.strokeStyle = `rgba(255,255,255,${1 - k})`; g.lineWidth = 6; g.beginPath(); g.arc(x, y, 40 + 70 * k, 0, Math.PI * 2); g.stroke(); } });
+    g.fillStyle = "rgba(255,255,255,0.85)"; g.beginPath(); g.arc(x, y, 38 * (1 - 0.25 * pr), 0, Math.PI * 2); g.fill();
+    g.strokeStyle = "rgba(0,0,0,0.35)"; g.lineWidth = 3; g.stroke(); g.globalAlpha = 1;
+  }
+  scrTex.needsUpdate = true;
+}
+
+// ---------- Animation ----------
+function spinAngle(t) {
+  // arrivée : -3π -> 0 (1 tour et demi), puis tour complet final
+  const a1 = lerp(-3 * Math.PI, 0, eOut(p(t, SPIN1[0], SPIN1[1])));
+  const a2 = 2 * Math.PI * eIO(p(t, SPIN2[0], SPIN2[1]));
+  return a1 + a2;
+}
+function spinSpeed(t) { const d = 1 / 60; return Math.abs(spinAngle(t + d) - spinAngle(t - d)) / (2 * d); }
+window.renderFrame = t => {
+  drawScreen(t);
+  // zoom caméra pendant l'abonnement, recul pour le tour final
+  const z = eIO(p(t, 1.55, 2.05)) * (1 - eIO(p(t, 4.35, 4.75)));
+  camera.position.set(0, lerp(0, 1.0, z), lerp(36, 28, z));
+  camera.lookAt(0, lerp(0, 1.0, z), 0);
+  const k = eOut(p(t, 0, 1.2));
+  phone.scale.setScalar(lerp(0.55, 1, k) * (1 + 0.03 * Math.max(0, Math.sin(p(t, 1.4, 1.8) * Math.PI))));
+  const sway = 0.12 * Math.sin(t * 1.4) * p(t, 1.6, 2.1) * (1 - p(t, 4.5, 4.75));
+  phone.rotation.set(0.05 + 0.04 * Math.sin(t * 1.1), spinAngle(t) + sway, -0.04 + 0.02 * Math.sin(t * 0.9));
+  phone.position.y = 0.25 * Math.sin(t * 1.6) + lerp(-6, 0, k);
+  // effets : arcs et lignes proportionnels à la vitesse de rotation
+  const v = clamp(spinSpeed(t) / 9);
+  arcs.forEach(({ pivot, m, off }, i) => {
+    pivot.rotation.y = spinAngle(t) * 1.25 + off;
+    m.scale.setScalar(Math.max(0.001, v));
+    m.visible = v > 0.05;
+  });
+  lines.forEach(({ m, x, y }, i) => {
+    const s = clamp((v - 0.35) / 0.65);
+    m.visible = s > 0.02;
+    m.scale.set(1, Math.max(0.001, s), 1);
+    m.position.set(x, y + ((t * 30 + i * 3) % 12) - 6, -4);
+  });
+  bursts.forEach(({ g, items, t0 }) => {
+    const b = p(t, t0 - 0.02, t0 + 0.45);
+    g.visible = b > 0 && b < 1;
+    items.forEach(({ m, a, d, s }) => {
+      const r = lerp(4, d, eOut(b));
+      m.position.set(Math.cos(a) * r, Math.sin(a) * r * 1.3, 1);
+      m.scale.setScalar(Math.max(0.001, s * Math.sin(Math.PI * b)));
+      m.rotation.z = b * 2;
+    });
+  });
+  renderer.render(scene, camera);
+};
+window.renderFrame(0);
+window.READY = true;
+</script>
+</body>
+</html>

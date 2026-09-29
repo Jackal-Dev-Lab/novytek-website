@@ -1,4 +1,4 @@
-// Rend une page d'animation image par image (30 i/s, 15 s) et encode en MP4 H.264.
+// Rend une page d'animation image par image (FPS=30 par défaut, durée = window.DURATION ou 15 s) et encode en MP4 H.264.
 // Extension .cjs : le package.json du site est en "type": "module".
 // Usage (depuis promo/) : FF=/chemin/ffmpeg [PAGE=variantes/pub-xxx.html] [VW=1920 VH=1080] [OUT=sortie.mp4] [CUES=reperes.json] node render.cjs full
 //                        node render.cjs preview 1 2.5 ...
@@ -7,7 +7,8 @@
 const { chromium } = require(process.env.PW || '/opt/node22/lib/node_modules/playwright');
 const { spawn } = require('child_process');
 const http = require('http'), fs = require('fs'), path = require('path');
-const FPS = 30, DUR = 15;
+const FPS = +(process.env.FPS || 30);
+let DUR = 15; // remplacé par window.DURATION si la page le définit
 const mode = process.argv[2] || 'preview';
 const ROOT = path.resolve(process.env.ROOT || __dirname);
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml' };
@@ -39,6 +40,7 @@ const server = http.createServer((req, res) => {
   console.log('Polices chargées :', ok);
   if (!ok) { console.error('Police non chargée, arrêt.'); process.exit(1); }
   if (errs.length) { console.error('Erreurs au chargement :', errs); process.exit(2); }
+  DUR = await page.evaluate(() => window.DURATION) || 15;
   if (process.env.CUES) {
     const cues = await page.evaluate(() => ({ duration: window.DURATION, pad: window.PAD, sfx: window.SFX, vo: window.VO }));
     fs.writeFileSync(process.env.CUES, JSON.stringify(cues, null, 1));
@@ -47,14 +49,18 @@ const server = http.createServer((req, res) => {
   if (mode === 'preview') {
     for (const t of process.argv.slice(3).map(Number)) {
       await page.evaluate(t => renderFrame(t), t);
-      await page.screenshot({ path: `prev_${t}.png` });
+      await page.screenshot({ path: `prev_${t}.png`, omitBackground: !!process.env.ALPHA });
     }
   } else {
+    // ALPHA=1 : fond transparent, export ProRes 4444 avec couche alpha (.mov)
+    const enc = process.env.ALPHA
+      ? ['-c:v', 'prores_ks', '-profile:v', '4444', '-pix_fmt', 'yuva444p10le', '-alpha_bits', '16', '-vendor', 'apl0']
+      : ['-c:v', 'libx264', '-preset', 'slow', '-crf', '18', '-pix_fmt', 'yuv420p', '-movflags', '+faststart'];
     const ff = spawn(process.env.FF, ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'png', '-i', '-',
-      '-c:v', 'libx264', '-preset', 'slow', '-crf', '18', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', process.env.OUT || 'novytek-promo-15s.mp4'], { stdio: ['pipe', 'inherit', 'inherit'] });
+      ...enc, process.env.OUT || 'novytek-promo-15s.mp4'], { stdio: ['pipe', 'inherit', 'inherit'] });
     for (let i = 0; i < FPS * DUR; i++) {
       await page.evaluate(t => renderFrame(t), i / FPS);
-      const buf = await page.screenshot({ type: 'png' });
+      const buf = await page.screenshot({ type: 'png', omitBackground: !!process.env.ALPHA });
       if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
     }
     ff.stdin.end();
