@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Carte de visite NovyTek (image de marque)</title>
+<link href="../fonts.css" rel="stylesheet">
+<link href="print.css" rel="stylesheet">
+<style>
+  /* Vistaprint 85 × 55 mm : fichier 88 × 58 mm (fond perdu), zone de sécurité 82 × 52 mm.
+     Paramètres d'adresse : #recto ou #verso, puis &s=1..4 (slogan). */
+  @page { size: 88mm 58mm; margin: 0; }
+  .page { width: 88mm; height: 58mm; }
+  .abs { position: absolute; }
+  .wm { right: -16mm; top: -9mm; width: 64mm; height: 76mm; opacity: .13; }
+  /* recto */
+  .r-logo { left: 0; right: 0; top: 17mm; justify-content: center; gap: 2.4mm; }
+  .r-logo svg { width: 11mm; height: 12mm; }
+  .r-logo .word { font-size: 9.6mm; }
+  .r-sl { left: 0; right: 0; top: 33mm; text-align: center; font-size: 3.5mm; font-weight: 600; }
+  /* verso */
+  .v-sl { left: 7mm; top: 7mm; width: 62mm; font-family: "Bricolage Grotesque"; font-weight: 800; font-size: 6.6mm; line-height: 1.05; letter-spacing: -0.03em; }
+  .v-eb { left: 7mm; top: 25mm; font-size: 2.1mm; font-weight: 700; letter-spacing: 0.4mm; color: var(--sky); text-transform: uppercase; }
+  .v-pts { left: 7mm; top: 28.6mm; font-size: 2.4mm; font-weight: 600; line-height: 1.5; color: var(--muted); }
+  .v-url { left: 7mm; top: 41.5mm; font-family: "Bricolage Grotesque"; font-weight: 800; font-size: 5mm; letter-spacing: -0.03em; }
+  .v-mail { left: 7mm; top: 47.6mm; font-size: 2.6mm; font-weight: 600; }
+  .qr { left: 62mm; top: 30mm; width: 19mm; height: 19mm; padding: 1.8mm; border-radius: 2mm; }
+</style>
+</head>
+<body>
+<div class="page" id="pg"></div>
+<script>
+const P = new URLSearchParams(location.hash.slice(1).replace(/^(recto|verso)&?/, ""));
+const face = location.hash.startsWith("#recto") ? "recto" : "verso";
+const SLOGANS = {
+  1: ["Votre site,", "vos règles."],
+  2: ["Donnez forme à", "votre entreprise."],
+  3: ["Simple à lancer.", "Facile à garder."],
+  4: ["Le web, plié", "à vos envies."],
+};
+const [a, b] = SLOGANS[P.get("s") || 1];
+const PLI = '<path d="M31 6h9v36h-9z" fill="#0b4f96"/><path d="M8 6h9l23 36h-9z" fill="#7cc6fb"/><path d="M31 42h9l-5.8-9.1z" fill="#0b4f96" opacity=".55"/><path d="M8 6h9v36H8z" fill="#1b8ce3"/><path d="M17 6v14.1L8 6z" fill="#7cc6fb" opacity=".35"/>';
+const pg = document.getElementById("pg");
+if (face === "recto") {
+  pg.style.background = "radial-gradient(110% 120% at 85% 0%, #14428a 0%, #08132b 62%)";
+  pg.innerHTML = `<div class="stripe" style="top:12mm"></div><div class="stripe" style="top:44mm"></div>
+    <div class="abs logo r-logo"><svg viewBox="6 4 36 40">${PLI}</svg><span class="word">novytek</span></div>
+    <div class="abs r-sl">${a} <span class="hl">${b}</span></div>`;
+} else {
+  pg.innerHTML = `<svg class="abs wm" viewBox="6 4 36 40">${PLI}</svg>
+    <div class="abs v-sl">${a}<br><span class="hl">${b}</span></div>
+    <div class="abs v-eb">Sites web par abonnement</div>
+    <div class="abs v-pts">Sans frais de création<br>Sans engagement<br>Hébergé en France</div>
+    <div class="abs v-url">novytek.fr</div>
+    <div class="abs v-mail">novytek.pro@gmail.com</div>
+    <div class="abs qr"><img src="qr.svg" alt="QR code vers novytek.fr"></div>`;
+}
+window.READY = true;
+</script>
+</body>
+</html>
