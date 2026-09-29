@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>NovyTek Promo</title>
+<link href="fonts.css" rel="stylesheet">
+<script src="icons.js"></script>
+<script src="logo.js"></script>
+<style>
+  :root {
+    --blue: #3b82f6;      /* hsl(217 91% 60%) = primary du site */
+    --blue-dark: #1d4fd8;
+    --blue-glow: #60a5fa;
+    --navy: #0b1736;
+    --navy-2: #102a63;
+    --light: #f5f5f5;     /* fond du logo */
+    --ink: #0d1b44;       /* couleur du texte du logo */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--light); }
+  body { font-family: "Montserrat", sans-serif; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .layer { position: absolute; inset: 0; }
+  .abs { position: absolute; }
+  .center-x { left: 0; right: 0; text-align: center; }
+  svg.ic { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Logo découpé depuis public/logo.png (1024x1024) */
+  .logo-n, .logo-txt { background-repeat: no-repeat; }
+
+  /* Scène sombre */
+  #dark { background: radial-gradient(1200px 1200px at 50% 30%, var(--navy-2), var(--navy)); }
+  .grid-bg { position: absolute; inset: -200px;
+    background-image: linear-gradient(rgba(96,165,250,.08) 2px, transparent 2px), linear-gradient(90deg, rgba(96,165,250,.08) 2px, transparent 2px);
+    background-size: 90px 90px; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(80px); }
+
+  .q { font-weight: 800; font-size: 104px; color: #fff; letter-spacing: -2px; white-space: nowrap; }
+  .q .hl { color: var(--blue-glow); }
+
+  .card { position: absolute; width: 460px; height: 330px; border-radius: 36px; background: rgba(255,255,255,.07);
+    border: 2px solid rgba(96,165,250,.35); padding: 40px 38px; color: #fff; }
+  .card .icw { width: 96px; height: 96px; border-radius: 26px; background: var(--blue); display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 16px 40px -10px rgba(59,130,246,.7); }
+  .card h3 { font-size: 44px; font-weight: 700; margin-top: 30px; line-height: 1.05; }
+  .card .pr { margin-top: 14px; font-size: 30px; font-weight: 600; color: rgba(255,255,255,.7); }
+  .card .pr b { color: var(--blue-glow); font-size: 40px; font-weight: 800; }
+
+  .adv { position: absolute; left: 110px; width: 860px; height: 150px; border-radius: 30px; background: #fff; display: flex; align-items: center; gap: 36px; padding: 0 40px; color: var(--ink); box-shadow: 0 20px 50px -20px rgba(0,0,0,.5); }
+  .adv .icw { flex: none; width: 90px; height: 90px; border-radius: 50%; background: rgba(59,130,246,.14); color: var(--blue); display: flex; align-items: center; justify-content: center; }
+  .adv span { font-size: 46px; font-weight: 700; }
+
+  .pill { display: inline-flex; align-items: center; gap: 24px; padding: 34px 60px; border-radius: 999px; font-weight: 800; font-size: 50px; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ===== Scène 1 & 5 : fond clair + logo ===== -->
+  <div class="layer" id="light">
+    <div class="abs" id="ring1" style="left:540px;top:760px;border-radius:50%;border:4px solid var(--blue);"></div>
+    <div class="abs" id="ring2" style="left:540px;top:760px;border-radius:50%;border:4px solid var(--blue);"></div>
+    <div class="abs logo-n" id="logoN"></div>
+    <div class="abs" id="logoTxtClip" style="overflow:hidden;"><div class="logo-txt" id="logoTxt"></div></div>
+    <div class="abs center-x" id="tagline" style="top:1010px;font-size:58px;font-weight:700;color:var(--ink);">Services Tech à Domicile</div>
+    <div class="abs center-x" id="tagline2" style="top:1100px;font-size:40px;font-weight:600;color:var(--blue);letter-spacing:4px;">RAPIDES • FIABLES • ABORDABLES</div>
+
+    <!-- Outro -->
+    <div class="abs center-x" id="cta1" style="top:1010px;"><span class="pill" style="background:var(--blue);color:#fff;box-shadow:0 24px 60px -16px rgba(59,130,246,.8);">Devis gratuit</span></div>
+    <div class="abs center-x" id="cta2" style="top:1220px;font-size:46px;font-weight:700;color:var(--ink);display:flex;justify-content:center;align-items:center;gap:26px;"><span id="icPin" style="color:var(--blue);display:inline-flex"></span>Montpellier et environs</div>
+    <div class="abs center-x" id="cta3" style="top:1350px;font-size:46px;font-weight:700;color:var(--ink);display:flex;justify-content:center;align-items:center;gap:26px;"><span id="icMsg" style="color:#25a55f;display:inline-flex"></span>WhatsApp : 06 67 62 32 92</div>
+  </div>
+
+  <!-- ===== Scènes 2-4 : fond sombre, révélé par un cercle ===== -->
+  <div class="layer" id="dark">
+    <div class="grid-bg" id="grid"></div>
+    <div class="blob" id="blob1" style="width:700px;height:700px;background:rgba(59,130,246,.45);"></div>
+    <div class="blob" id="blob2" style="width:600px;height:600px;background:rgba(29,79,216,.5);"></div>
+
+    <!-- Scène 2 : problèmes -->
+    <div class="abs center-x q" id="q1" style="top:560px;">PC <span class="hl">lent</span> ?</div>
+    <div class="abs center-x q" id="q2" style="top:740px;">WiFi <span class="hl">capricieux</span> ?</div>
+    <div class="abs center-x q" id="q3" style="top:920px;">TV <span class="hl">à fixer</span> ?</div>
+    <div class="abs center-x" id="q4" style="top:1180px;"><span class="pill" style="background:#fff;color:var(--blue-dark);font-size:64px;">On s'en occupe.</span></div>
+
+    <!-- Scène 3 : services -->
+    <div class="abs center-x" id="svcTitle" style="top:250px;color:#fff;font-size:84px;font-weight:800;">Nos services</div>
+    <div class="abs center-x" id="svcSub" style="top:360px;color:rgba(255,255,255,.7);font-size:38px;font-weight:600;">À domicile, tarifs transparents</div>
+    <div id="cards"></div>
+
+    <!-- Scène 4 : avantages -->
+    <div class="abs center-x" id="advTitle" style="top:420px;color:#fff;font-size:84px;font-weight:800;">Pourquoi <span style="color:var(--blue-glow)">NovyTek</span> ?</div>
+    <div id="advs"></div>
+  </div>
+
+  <!-- Cercle de transition vers l'outro -->
+  <div class="abs" id="wipeOut" style="border-radius:50%;background:var(--light);"></div>
+</div>
+
+<script>
+const W = 1080, H = 1920;
+const $ = id => document.getElementById(id);
+const icon = (name, size, sw = 2) =>
+  `<svg class="ic" width="${size}" height="${size}" viewBox="0 0 24 24" style="stroke-width:${sw}">${ICONS[name]}</svg>`;
+
+// ---------- Logo (découpes de public/logo.png) ----------
+// Marque "N" : x 100..282, y 410..590 ; texte "NOVYTEK" : x 325..925, y 455..555 (px de l'image 1024)
+const N_BOX = { x: 100, y: 410, w: 182, h: 180 };
+const T_BOX = { x: 325, y: 452, w: 600, h: 106 };
+function setCrop(el, box, scale) {
+  el.style.width = box.w * scale + "px";
+  el.style.height = box.h * scale + "px";
+  el.style.backgroundImage = `url(${LOGO})`;
+  el.style.backgroundSize = 1024 * scale + "px " + 1024 * scale + "px";
+  el.style.backgroundPosition = `${-box.x * scale}px ${-box.y * scale}px`;
+}
+const LS = 1.1; // échelle du logo
+setCrop($("logoN"), N_BOX, LS);
+setCrop($("logoTxt"), T_BOX, LS);
+const nW = N_BOX.w * LS, nH = N_BOX.h * LS, tW = T_BOX.w * LS, tH = T_BOX.h * LS, gap = 44 * LS;
+const fullW = nW + gap + tW;
+const logoLeft = (W - fullW) / 2, logoCY = 760;
+
+$("icPin").innerHTML = icon("map-pin", 52, 2.4);
+$("icMsg").innerHTML = icon("message-circle", 52, 2.4);
+
+// ---------- Cartes services (données de src/pages/Home.tsx) ----------
+const SERVICES = [
+  ["cpu", "Montage PC", "80€"],
+  ["settings", "Optimisation", "60€"],
+  ["wifi", "Installation Réseau", "70€"],
+  ["house", "Domotique", "50€"],
+  ["tv", "TV & Audio", "90€"],
+  ["gamepad-2", "Setup Gaming", "100€"],
+];
+const cardsEl = $("cards");
+SERVICES.forEach(([ic, title, price], i) => {
+  const c = document.createElement("div");
+  c.className = "card"; c.id = "card" + i;
+  const col = i % 2, row = Math.floor(i / 2);
+  c.style.left = (60 + col * 500) + "px";
+  c.style.top = (520 + row * 380) + "px";
+  c.innerHTML = `<div class="icw">${icon(ic, 54)}</div><h3>${title}</h3><div class="pr">dès <b>${price}</b></div>`;
+  cardsEl.appendChild(c);
+});
+
+// ---------- Avantages (données de src/pages/Home.tsx) ----------
+const ADV = [
+  ["clock", "Intervention sous 48h"],
+  ["shield-check", "Garantie satisfaction"],
+  ["house", "Service à domicile"],
+  ["circle-check", "Tarifs transparents"],
+];
+const advEl = $("advs");
+ADV.forEach(([ic, txt], i) => {
+  const a = document.createElement("div");
+  a.className = "adv"; a.id = "adv" + i;
+  a.style.top = (660 + i * 190) + "px";
+  a.innerHTML = `<div class="icw">${icon(ic, 50, 2.4)}</div><span>${txt}</span>`;
+  advEl.appendChild(a);
+});
+
+// ---------- Outils d'animation ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const p = (t, a, b) => clamp((t - a) / (b - a));
+const eOut = x => 1 - Math.pow(1 - x, 3);
+const eIn = x => x * x * x;
+const eIO = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const eBack = x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+function st(el, o) { if (typeof el === "string") el = $(el); Object.assign(el.style, o); }
+function show(el, v) { st(el, { display: v ? "" : "none" }); }
+
+// Entrée/sortie standard : glisse + fondu
+function inOut(el, t, a, b, c, d, { dx = 0, dy = 60, ox = 0, oy = -40, scaleIn = 1 } = {}) {
+  const i = eOut(p(t, a, b)), o = eIn(p(t, c, d));
+  const x = lerp(dx, 0, i) + lerp(0, ox, o), y = lerp(dy, 0, i) + lerp(0, oy, o);
+  const s = lerp(scaleIn, 1, i);
+  st(el, { opacity: i * (1 - o), transform: `translate(${x}px,${y}px) scale(${s})` });
+}
+
+// ---------- Timeline (secondes) ----------
+// 0.0-3.0  Logo + accroche (fond clair)
+// 2.6-3.2  Cercle bleu -> scène sombre
+// 3.0-5.4  "PC lent ? / WiFi capricieux ? / TV à fixer ?" -> "On s'en occupe."
+// 5.4-10.0 Nos services (6 cartes avec tarifs)
+// 10.0-12.6 Pourquoi NovyTek ? (4 avantages)
+// 12.4-13.0 Cercle clair -> outro
+// 12.8-15.0 Logo + Devis gratuit + zone + WhatsApp
+window.renderFrame = function (t) {
+  // ----- Couche claire : intro -----
+  const outro = t >= 12.4;
+  const nIn = eBack(p(t, 0.15, 0.85));
+  const slide = eIO(p(t, 0.85, 1.5));
+  const reveal = eOut(p(t, 1.45, 2.1));
+  // Position du logo : intro centré (y=760), outro plus haut (y=720)
+  const cy = outro ? 720 : logoCY;
+  const oIn = outro ? eOut(p(t, 12.7, 13.3)) : 1;
+  const nStartX = (W - nW) / 2, nEndX = logoLeft;
+  const nX = outro ? nEndX : lerp(nStartX, nEndX, slide);
+  const nScale = outro ? lerp(0.4, 1, eBack(p(t, 12.7, 13.3))) : nIn;
+  const nRot = outro ? 0 : lerp(-90, 0, eOut(p(t, 0.15, 0.85)));
+  st("logoN", { left: nX + "px", top: (cy - nH / 2) + "px", opacity: outro ? oIn : clamp(nIn * 2), transform: `scale(${nScale}) rotate(${nRot}deg)` });
+  const txtX = logoLeft + nW + gap;
+  const rv = outro ? eOut(p(t, 12.9, 13.5)) : reveal;
+  st("logoTxtClip", { left: txtX + "px", top: (cy - tH / 2) + "px", width: tW * rv + "px", height: tH + "px" });
+  st("logoTxt", { transform: `translateX(${lerp(-60, 0, rv)}px)` });
+
+  // Anneaux d'onde derrière le N
+  [["ring1", 0.55], ["ring2", 0.8]].forEach(([id, s0]) => {
+    const k = p(t, s0, s0 + 1.4), r = lerp(80, 900, eOut(k));
+    st(id, { width: 2 * r + "px", height: 2 * r + "px", marginLeft: -r + "px", marginTop: -r + "px", opacity: (outro ? 0 : 0.5 * (1 - k)) * (k > 0 ? 1 : 0) });
+  });
+
+  show("tagline", !outro); show("tagline2", !outro);
+  inOut($("tagline"), t, 1.6, 2.1, 9, 10, { dy: 40 });
+  inOut($("tagline2"), t, 1.8, 2.3, 9, 10, { dy: 40 });
+
+  show("cta1", outro); show("cta2", outro); show("cta3", outro);
+  inOut($("cta1"), t, 13.3, 13.8, 99, 100, { dy: 50, scaleIn: 0.7 });
+  inOut($("cta2"), t, 13.6, 14.1, 99, 100, { dy: 40 });
+  inOut($("cta3"), t, 13.8, 14.3, 99, 100, { dy: 40 });
+  // léger "pulse" du bouton devis
+  if (t > 13.8) { const pu = 1 + 0.035 * Math.sin((t - 13.8) * 7); $("cta1").style.transform += ` scale(${pu})`; }
+
+  // ----- Couche sombre : révélée par un cercle qui s'agrandit depuis le N -----
+  const R = Math.hypot(W, H);
+  const openK = eIO(p(t, 2.6, 3.2));
+  const darkVisible = t >= 2.6 && t < 13.0;
+  show("dark", darkVisible);
+  st("dark", { clipPath: `circle(${openK * R}px at 50% ${logoCY}px)` });
+
+  // fond animé
+  st("grid", { transform: `translate(${(t * 18) % 90}px, ${(t * 30) % 90}px)` });
+  st("blob1", { left: (200 + 180 * Math.sin(t * 0.7)) + "px", top: (300 + 200 * Math.cos(t * 0.5)) + "px" });
+  st("blob2", { left: (500 + 160 * Math.cos(t * 0.6)) + "px", top: (1200 + 180 * Math.sin(t * 0.8)) + "px" });
+
+  // Scène 2
+  inOut($("q1"), t, 3.05, 3.45, 5.0, 5.35, { dx: -300, dy: 0, ox: 0, oy: -80 });
+  inOut($("q2"), t, 3.45, 3.85, 5.0, 5.35, { dx: 300, dy: 0, ox: 0, oy: -80 });
+  inOut($("q3"), t, 3.85, 4.25, 5.0, 5.35, { dx: -300, dy: 0, ox: 0, oy: -80 });
+  inOut($("q4"), t, 4.35, 4.75, 5.0, 5.35, { dy: 0, oy: -80, scaleIn: 0.4 });
+  if (t > 4.35 && t < 4.75) $("q4").style.transform = `scale(${lerp(0.4, 1, eBack(p(t, 4.35, 4.75)))})`;
+
+  // Scène 3
+  inOut($("svcTitle"), t, 5.4, 5.9, 9.6, 10.0, { dy: -60, oy: -60 });
+  inOut($("svcSub"), t, 5.55, 6.05, 9.6, 10.0, { dy: -40, oy: -60 });
+  SERVICES.forEach((_, i) => {
+    const a = 5.8 + i * 0.22, el = $("card" + i);
+    const k = p(t, a, a + 0.55), o = eIn(p(t, 9.55 + i * 0.05, 9.95 + i * 0.05));
+    const s = lerp(0.5, 1, eBack(k));
+    const dir = i % 2 ? 1 : -1;
+    st(el, { opacity: clamp(k * 2) * (1 - o), transform: `translate(${dir * 700 * o}px, ${lerp(80, 0, eOut(k))}px) scale(${s})` });
+    // Illumination de la carte en séquence (met en avant chaque service)
+    const hl = Math.max(0, 1 - Math.abs(t - (7.4 + i * 0.35)) / 0.35);
+    el.style.background = `rgba(59,130,246,${0.07 + 0.35 * hl})`;
+    el.style.borderColor = `rgba(96,165,250,${0.35 + 0.65 * hl})`;
+  });
+
+  // Scène 4
+  inOut($("advTitle"), t, 10.0, 10.5, 12.2, 12.5, { dy: -60, oy: -60 });
+  ADV.forEach((_, i) => {
+    const a = 10.3 + i * 0.3;
+    inOut($("adv" + i), t, a, a + 0.5, 12.15, 12.45, { dx: -1000, dy: 0, ox: 1000, oy: 0 });
+  });
+
+  // ----- Transition vers l'outro -----
+  const wk = eIO(p(t, 12.4, 13.0));
+  show("wipeOut", t >= 12.4 && t < 13.0);
+  const r2 = wk * R;
+  st("wipeOut", { left: (W / 2 - r2) + "px", top: (H / 2 - r2) + "px", width: 2 * r2 + "px", height: 2 * r2 + "px" });
+};
+
+window.renderFrame(0);
+</script>
+</body>
+</html>
