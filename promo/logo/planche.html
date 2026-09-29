@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>NovyTek – pistes de logo</title>
+<link href="../fonts.css" rel="stylesheet">
+<style>
+  :root { --navy: #08132b; --blue: #1b8ce3; --sky: #7cc6fb; --deep: #0b4f96; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 2400px; background: #eef2f7; font-family: "Figtree", sans-serif; color: var(--navy); padding: 70px; }
+  h1 { font-family: "Bricolage Grotesque"; font-size: 64px; font-weight: 800; letter-spacing: -2px; }
+  .intro { font-size: 26px; color: #4a5b75; margin: 10px 0 50px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px; }
+  .col { background: #fff; border-radius: 28px; overflow: hidden; box-shadow: 0 10px 40px -20px rgba(8,19,43,.35); }
+  .hero { background: var(--navy); height: 420px; display: flex; align-items: center; justify-content: center; }
+  .hero svg { width: 230px; height: 230px; }
+  .body { padding: 34px; }
+  .name { font-family: "Bricolage Grotesque"; font-size: 40px; font-weight: 800; letter-spacing: -1px; }
+  .idea { font-size: 22px; color: #4a5b75; line-height: 1.4; margin-top: 8px; min-height: 124px; }
+  .lock { display: flex; align-items: center; gap: 18px; padding: 26px 22px; border-radius: 18px; margin-top: 20px; }
+  .lock svg { width: 76px; height: 76px; flex: none; }
+  .lock span { font-family: "Bricolage Grotesque"; font-weight: 800; font-size: 62px; letter-spacing: -2px; }
+  .light { background: #fff; border: 2px solid #e1e7ef; }
+  .dark { background: var(--navy); color: #eef4fb; }
+  .sizes { display: flex; align-items: end; gap: 26px; margin-top: 26px; padding: 22px; border-radius: 18px; border: 2px dashed #d3dbe6; }
+  .sizes .app { width: 96px; height: 96px; border-radius: 24px; background: var(--navy); display: flex; align-items: center; justify-content: center; }
+  .sizes .app svg { width: 64px; height: 64px; }
+  .tab { display: flex; align-items: center; gap: 10px; background: #dfe5ee; border-radius: 12px 12px 0 0; padding: 10px 16px; font-size: 20px; }
+  .lbl { font-size: 18px; color: #6b7c95; margin-top: 8px; }
+</style>
+</head>
+<body>
+<h1>NovyTek — 4 pistes de logo</h1>
+<div class="intro">Chaque piste garde le « N » et le bleu de la marque, mais raconte quelque chose de NovyTek. Montrées en grand, avec le nom, et aux petites tailles (icône d'app, onglet du navigateur).</div>
+<div class="grid" id="grid"></div>
+<script>
+// Chaque marque est dessinée sur une grille de 48 × 48.
+// fg = couleur principale, ac = couleur d'accent, bg = couleur du fond (pour les découpes)
+const MARKS = {
+  sections: (fg, ac) => `
+    <rect x="6" y="6" width="9" height="36" rx="3" fill="${fg}"/>
+    <rect x="33" y="6" width="9" height="36" rx="3" fill="${fg}"/>
+    <rect x="13" y="8" width="9.5" height="10.4" rx="2.2" fill="${ac}"/>
+    <rect x="19.25" y="18.8" width="9.5" height="10.4" rx="2.2" fill="${ac}"/>
+    <rect x="25.5" y="29.6" width="9.5" height="10.4" rx="2.2" fill="${ac}"/>`,
+  pli: (fg, ac, deep) => `
+    <path d="M31 6h9v36h-9z" fill="${deep}"/>
+    <path d="M8 6h9l23 36h-9z" fill="${ac}"/>
+    <path d="M31 42h9l-5.8-9.1z" fill="${deep}" opacity=".55"/>
+    <path d="M8 6h9v36H8z" fill="${fg}"/>
+    <path d="M17 6v14.1L8 6z" fill="${ac}" opacity=".35"/>`,
+  trace: (fg, ac) => `
+    <path d="M9 40V14.5c0-4.6 5.9-6.5 8.6-2.8l13 18.6c2.7 3.8 8.4 1.9 8.4-2.8V11" fill="none" stroke="${fg}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="39" cy="9.6" r="4.6" fill="${ac}"/>`,
+  clic: (fg, ac, deep, bg) => `
+    <path d="M10 39V10l22 27V10" fill="none" stroke="${fg}" stroke-width="6.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M29.5 25.5v17.5l4.4-4.1 3.2 6.9 3.1-1.4-3.2-6.8h6z" fill="${ac}" stroke="${bg}" stroke-width="2.6" stroke-linejoin="round"/>`,
+};
+const INFO = {
+  sections: ["Sections", "Le trait du N est fait de 3 blocs empilés : les sections qu'on ajoute une à une pour composer son site."],
+  pli: ["Pli", "Un N plié comme un ruban de papier, en 3 tons de bleu : un site qu'on façonne soi-même. Géométrique et sobre."],
+  trace: ["Tracé", "Un N d'un seul trait souple, dont l'extrémité s'allume : simple, humain, reconnaissable même tout petit."],
+  clic: ["Clic", "Un N net et un curseur qui vient cliquer dessus : « le site que vous tenez vous-même », en un geste."],
+};
+const svg = (k, fg, ac, deep, bg) => `<svg viewBox="0 0 48 48">${MARKS[k](fg, ac, deep, bg)}</svg>`;
+document.getElementById("grid").innerHTML = Object.keys(MARKS).map(k => `
+  <div class="col">
+    <div class="hero">${svg(k, "#1b8ce3", "#7cc6fb", "#0b4f96", "#08132b")}</div>
+    <div class="body">
+      <div class="name">${INFO[k][0]}</div>
+      <div class="idea">${INFO[k][1]}</div>
+      <div class="lock light">${svg(k, "#1b8ce3", k === "clic" ? "#08132b" : "#7cc6fb", "#0b4f96", "#ffffff")}<span>novytek</span></div>
+      <div class="lock dark">${svg(k, "#1b8ce3", "#7cc6fb", "#0b4f96", "#08132b")}<span>novytek</span></div>
+      <div class="sizes">
+        <div><div class="app">${svg(k, "#1b8ce3", "#7cc6fb", "#0b4f96", "#08132b")}</div><div class="lbl">icône d'app</div></div>
+        <div><div class="tab">${svg(k, "#1b8ce3", k === "clic" ? "#08132b" : "#7cc6fb", "#0b4f96", "#dfe5ee").replace("<svg", '<svg width="32" height="32"')}NovyTek</div><div class="lbl">32 px</div></div>
+        <div><div class="tab">${svg(k, "#1b8ce3", k === "clic" ? "#08132b" : "#7cc6fb", "#0b4f96", "#dfe5ee").replace("<svg", '<svg width="16" height="16"')}NovyTek</div><div class="lbl">16 px</div></div>
+      </div>
+    </div>
+  </div>`).join("");
+window.READY = true;
+</script>
+</body>
+</html>
