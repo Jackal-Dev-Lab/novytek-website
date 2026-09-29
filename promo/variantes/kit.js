@@ -7,6 +7,16 @@ const VERT = H >= W;
 document.body.classList.add(VERT ? "v" : "h");
 
 // ---------- Outils ----------
+
+// Logo « Pli » : la barre gauche monte, la diagonale se déplie, la barre droite apparaît (d de 0 à 1)
+function pliFrame(d) {
+  const c = x => Math.min(1, Math.max(0, x));
+  const k1 = c(d / 0.35), k2 = c((d - 0.25) / 0.45), k3 = c((d - 0.55) / 0.45);
+  const sy = (id, k, y) => document.getElementById(id).setAttribute("transform", `translate(0 ${y}) scale(1 ${Math.max(0.0001, k)}) translate(0 ${-y})`);
+  sy("plL", k1, 42); sy("plH", k1, 42); sy("plD", k2, 6); sy("plR", k3, 42);
+  document.getElementById("plS").setAttribute("opacity", String(0.55 * Math.min(k2, k3)));
+  document.getElementById("plH").setAttribute("opacity", String(0.35 * k2));
+}
 const $ = id => document.getElementById(id);
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const p = (t, a, b) => clamp((t - a) / (b - a));
@@ -80,8 +90,7 @@ function bgFrame(t) {
 const endEl = document.createElement("div"); endEl.className = "scene"; endEl.id = "endcard";
 endEl.innerHTML = `
   <div class="abs" id="brandWrap"><div id="brand">
-    <svg id="mark" width="190" height="190" viewBox="0 0 34 34"><rect width="34" height="34" rx="10" fill="#1b8ce3"/>
-      <path id="markN" d="M10 24V10l14 14V10" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="100" stroke-dasharray="100"/></svg>
+    <svg id="mark" width="200" height="200" viewBox="0 0 48 48"><path id="plR" d="M31 6h9v36h-9z" fill="#0b4f96"/><path id="plD" d="M8 6h9l23 36h-9z" fill="#7cc6fb"/><path id="plS" d="M31 42h9l-5.8-9.1z" fill="#0b4f96" opacity=".55"/><path id="plL" d="M8 6h9v36H8z" fill="#1b8ce3"/><path id="plH" d="M17 6v14.1L8 6z" fill="#7cc6fb" opacity=".35"/></svg>
     <div class="word brand" id="word"><span id="wordIn">novytek</span></div>
   </div></div>
   <div class="abs" id="cta"><span class="btn" id="ctaBtn"></span></div>
@@ -119,7 +128,7 @@ function frameCommon(t) {
   if (!on) return;
   const base = END + 0.15;
   st("mark", { transform: `scale(${eBack(p(t, base, base + 0.6))}) rotate(${lerp(-25, 0, eOut(p(t, base, base + 0.6)))}deg)` });
-  $("markN").setAttribute("stroke-dashoffset", String(100 * (1 - eIO(p(t, base + 0.35, base + 1.05)))));
+  pliFrame(eIO(p(t, base + 0.35, base + 1.05)));
   const wr = eOut(p(t, base + 0.8, base + 1.5));
   st("word", { width: $("wordIn").offsetWidth * wr + "px", opacity: clamp(wr * 3) });
   st("wordIn", { transform: `translateX(${lerp(-40, 0, wr)}px)` });

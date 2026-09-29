@@ -9,7 +9,7 @@
 <style>
   /* Textes et tarifs repris de https://novytek.fr ; rendu 3D avec three.js (licence MIT, voir 3d/LICENSE-three.txt) */
   #gl { position: absolute; left: 0; top: 0; }
-  #brandWrap { display: none !important; } /* le logo du carton de fin est en 3D */
+  #brandWrap { display: none !important; } /* le logo (Pli) du carton de fin est en 3D */
   body.v #s1t { left: 0; right: 0; text-align: center; top: 1150px; font-size: 112px; }
   body.v #s1s { top: 1420px; font-size: 44px; font-weight: 600; }
   body.v #s2t { left: 80px; top: 230px; font-size: 84px; }
@@ -127,6 +127,8 @@ composer.addPass(new OutputPass());
 // ---------- Matériaux ----------
 const blueMat = new THREE.MeshPhysicalMaterial({ color: 0x1b8ce3, metalness: 0.15, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.06 });
 const whiteMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.0, roughness: 0.18, clearcoat: 1 });
+const skyMat = new THREE.MeshPhysicalMaterial({ color: 0x7cc6fb, metalness: 0.1, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.06 });
+const deepMat = new THREE.MeshPhysicalMaterial({ color: 0x0b4f96, metalness: 0.2, roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.06 });
 const glowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0x7cc6fb).multiplyScalar(2.4), toneMapped: false });
 const darkMat = new THREE.MeshPhysicalMaterial({ color: 0x16233f, metalness: 0.55, roughness: 0.28, clearcoat: 1 });
 const lightMat = new THREE.MeshStandardMaterial({ color: 0xc9d3df, roughness: 0.6 });
@@ -174,17 +176,15 @@ scene3.add(particles);
 // ---------- Logo 3D : tuile arrondie + N en relief + anneau en orbite ----------
 function makeLogo() {
   const g = new THREE.Group();
-  const body = slab(34, 34, 10, 5, 1.4, blueMat); g.add(body);
-  const front = 2.5 + 1.4;
-  // N du logo (tracé M10 24 V10 l14 14 V10, trait 3.2, bouts ronds) en tubes
-  const P = [[-7, -7], [-7, 7], [7, -7], [7, 7]];
-  for (let i = 0; i < 3; i++) {
-    const [x1, y1] = P[i], [x2, y2] = P[i + 1], len = Math.hypot(x2 - x1, y2 - y1);
-    const m = new THREE.Mesh(new THREE.CapsuleGeometry(1.6, len, 10, 24), whiteMat);
-    m.position.set((x1 + x2) / 2, (y1 + y2) / 2, front + 0.15);
-    m.rotation.z = Math.atan2(y2 - y1, x2 - x1) - Math.PI / 2;
-    g.add(m);
-  }
+  // Logo « Pli » (grille 48 × 48) : 3 pièces extrudées, empilées comme un ruban plié
+  const piece = (pts, mat, z) => {
+    const sh = new THREE.Shape(); pts.forEach(([x, y], i) => i ? sh.lineTo(x - 24, 24 - y) : sh.moveTo(x - 24, 24 - y));
+    const geo = new THREE.ExtrudeGeometry(sh, { depth: 3.2, bevelEnabled: true, bevelThickness: 0.7, bevelSize: 0.55, bevelSegments: 5 });
+    geo.translate(0, 0, z - 1.6); return new THREE.Mesh(geo, mat);
+  };
+  g.add(piece([[31, 6], [40, 6], [40, 42], [31, 42]], deepMat, -2.2));
+  g.add(piece([[8, 6], [17, 6], [40, 42], [31, 42]], skyMat, 0));
+  g.add(piece([[8, 6], [17, 6], [17, 42], [8, 42]], blueMat, 2.2));
   const ringPivot = new THREE.Group();
   const ring = new THREE.Mesh(new THREE.TorusGeometry(27, 0.42, 16, 220), glowMat);
   const sat = new THREE.Mesh(new THREE.SphereGeometry(1.4, 24, 16), glowMat);
@@ -300,7 +300,7 @@ function frame3D(t) {
   const gl1 = p(t, 1.0, 2.3), gl2 = p(t, END + 1.2, END + 2.4);
   glint.intensity = 0;
   if (gl1 > 0 && gl1 < 1) { glint.intensity = 25 * Math.sin(Math.PI * gl1); glint.position.set(lerp(-4, 4, gl1), py(700) + 1.5, 3); }
-  if (gl2 > 0 && gl2 < 1) { glint.intensity = 22 * Math.sin(Math.PI * gl2); glint.position.set(lerp(-4, 4, gl2), py(650) + 1.2, 3); }
+  if (gl2 > 0 && gl2 < 1) { glint.intensity = 7 * Math.sin(Math.PI * gl2); glint.position.set(lerp(-4, 4, gl2), py(650) + 1.2, 3); }
 
   // Téléphone
   const inS2 = t >= 3.4 && t < 7.75;
