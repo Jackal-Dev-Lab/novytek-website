@@ -7,7 +7,7 @@ VID=$1; OUT=$2
 python3 "$(dirname "$0")/sfx.py" sfx.wav
 $FF -loglevel error -y -i voice_final.wav -i sfx.wav -filter_complex "\
 [0]aformat=channel_layouts=stereo,asplit=2[v][sc];\
-[1]loudnorm=I=-30:TP=-6:LRA=15,aresample=48000[bg];\
+[1]loudnorm=I=-33:TP=-8:LRA=15,aresample=48000[bg];\
 [bg][sc]sidechaincompress=threshold=0.03:ratio=4:attack=20:release=350:makeup=1[duck];\
 [v][duck]amix=inputs=2:normalize=0,alimiter=limit=0.84:level=false[m]" -map "[m]" -ar 48000 mix_pre.wav
 set -- $($FF -hide_banner -i mix_pre.wav -af loudnorm=I=-16:TP=-1.5:LRA=11:print_format=json -f null - 2>&1 | sed -n '/{/,/}/p' | python3 -c "import json,sys;d=json.load(sys.stdin);print(d['input_i'],d['input_tp'],d['input_lra'],d['input_thresh'],d['target_offset'])")
