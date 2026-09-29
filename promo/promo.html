@@ -4,162 +4,169 @@
 <meta charset="utf-8">
 <title>NovyTek Promo</title>
 <link href="fonts.css" rel="stylesheet">
-<script src="icons.js"></script>
-<script src="logo.js"></script>
 <style>
+  /* Identité relevée sur https://novytek.fr */
   :root {
-    --blue: #3b82f6;      /* hsl(217 91% 60%) = primary du site */
-    --blue-dark: #1d4fd8;
-    --blue-glow: #60a5fa;
-    --navy: #0b1736;
-    --navy-2: #102a63;
-    --light: #f5f5f5;     /* fond du logo */
-    --ink: #0d1b44;       /* couleur du texte du logo */
+    --bg: #08132b;
+    --bg-2: #0a1734;
+    --line: #1b304c;
+    --blue: #1b8ce3;
+    --sky: #7cc6fb;
+    --text: #eef4fb;
+    --muted: #9fb3cc;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--light); }
-  body { font-family: "Montserrat", sans-serif; }
-  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
-  .layer { position: absolute; inset: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+  body { font-family: "Figtree", sans-serif; color: var(--text); }
+  h1, h2, .brand, .price, .big { font-family: "Bricolage Grotesque", sans-serif; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
   .abs { position: absolute; }
-  .center-x { left: 0; right: 0; text-align: center; }
-  svg.ic { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .scene { position: absolute; inset: 0; }
+  .eyebrow { font-size: 26px; font-weight: 700; letter-spacing: 6px; color: var(--sky); text-transform: uppercase; }
 
-  /* Logo découpé depuis public/logo.png (1024x1024) */
-  .logo-n, .logo-txt { background-repeat: no-repeat; }
+  /* Fond : bandes horizontales bleues façon site + halo */
+  .stripe { position: absolute; left: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(27,140,227,.55), transparent); }
+  #halo { position: absolute; width: 1100px; height: 1100px; border-radius: 50%; background: radial-gradient(circle, rgba(27,140,227,.28), transparent 65%); }
 
-  /* Scène sombre */
-  #dark { background: radial-gradient(1200px 1200px at 50% 30%, var(--navy-2), var(--navy)); }
-  .grid-bg { position: absolute; inset: -200px;
-    background-image: linear-gradient(rgba(96,165,250,.08) 2px, transparent 2px), linear-gradient(90deg, rgba(96,165,250,.08) 2px, transparent 2px);
-    background-size: 90px 90px; }
-  .blob { position: absolute; border-radius: 50%; filter: blur(80px); }
+  /* Scène 1 : logo */
+  #brand { display: flex; align-items: center; gap: 34px; }
+  #brand .word { font-size: 124px; font-weight: 800; letter-spacing: -3px; }
 
-  .q { font-weight: 800; font-size: 104px; color: #fff; letter-spacing: -2px; white-space: nowrap; }
-  .q .hl { color: var(--blue-glow); }
+  /* Scène 2 : titre mot à mot */
+  #h1 { left: 80px; right: 80px; top: 560px; font-size: 128px; line-height: 1.02; font-weight: 800; letter-spacing: -3px; }
+  #h1 .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 12px; }
+  #h1 .w > span { display: inline-block; }
+  #h1 .hl { color: var(--sky); }
+  #sub { left: 80px; right: 80px; top: 1330px; font-size: 42px; line-height: 1.35; color: var(--muted); font-weight: 500; }
+  #sub b { color: var(--text); font-weight: 700; }
 
-  .card { position: absolute; width: 460px; height: 330px; border-radius: 36px; background: rgba(255,255,255,.07);
-    border: 2px solid rgba(96,165,250,.35); padding: 40px 38px; color: #fff; }
-  .card .icw { width: 96px; height: 96px; border-radius: 26px; background: var(--blue); display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 16px 40px -10px rgba(59,130,246,.7); }
-  .card h3 { font-size: 44px; font-weight: 700; margin-top: 30px; line-height: 1.05; }
-  .card .pr { margin-top: 14px; font-size: 30px; font-weight: 600; color: rgba(255,255,255,.7); }
-  .card .pr b { color: var(--blue-glow); font-size: 40px; font-weight: 800; }
+  /* Scène 3 : éditeur */
+  #s3title { left: 80px; right: 80px; top: 180px; font-size: 84px; line-height: 1.02; font-weight: 800; letter-spacing: -2px; }
+  #panel { left: 80px; top: 470px; width: 360px; }
+  .sec { height: 78px; display: flex; align-items: center; gap: 18px; padding: 0 22px; border-radius: 16px; font-size: 32px; font-weight: 600; color: var(--muted); margin-bottom: 12px; border: 2px solid transparent; }
+  .sec i { font-style: normal; font-size: 22px; font-weight: 700; color: var(--sky); opacity: .8; width: 34px; }
+  #phone { left: 480px; top: 450px; width: 520px; height: 960px; border-radius: 56px; background: #fff; border: 12px solid #16233f; overflow: hidden; box-shadow: 0 40px 120px -30px rgba(27,140,227,.6); }
+  .blk { position: absolute; left: 22px; right: 22px; border-radius: 20px; overflow: hidden; }
+  #swatches { left: 80px; top: 1480px; display: flex; gap: 22px; }
+  .sw { width: 78px; height: 78px; border-radius: 22px; border: 4px solid transparent; }
+  #combo { left: 80px; top: 1600px; }
+  #combo .big { font-size: 110px; font-weight: 800; letter-spacing: -3px; line-height: 1; }
+  #combo span { font-size: 34px; color: var(--muted); font-weight: 600; }
 
-  .adv { position: absolute; left: 110px; width: 860px; height: 150px; border-radius: 30px; background: #fff; display: flex; align-items: center; gap: 36px; padding: 0 40px; color: var(--ink); box-shadow: 0 20px 50px -20px rgba(0,0,0,.5); }
-  .adv .icw { flex: none; width: 90px; height: 90px; border-radius: 50%; background: rgba(59,130,246,.14); color: var(--blue); display: flex; align-items: center; justify-content: center; }
-  .adv span { font-size: 46px; font-weight: 700; }
+  /* Scène 4 : formules */
+  #s4title { left: 0; right: 0; top: 220px; text-align: center; font-size: 96px; font-weight: 800; letter-spacing: -2px; }
+  .plan { position: absolute; left: 90px; width: 900px; height: 250px; border-radius: 34px; background: var(--bg-2); border: 2px solid var(--line); padding: 40px 50px; display: flex; justify-content: space-between; align-items: center; }
+  .plan h2 { font-size: 58px; font-weight: 800; }
+  .plan p { font-size: 28px; color: var(--muted); margin-top: 10px; max-width: 500px; line-height: 1.25; }
+  .plan .price { font-size: 96px; font-weight: 800; letter-spacing: -2px; white-space: nowrap; }
+  .plan .price small { font-family: "Figtree"; font-size: 30px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+  .plan.pop { background: linear-gradient(135deg, #0f3a73, #0b2451); border-color: var(--blue); }
+  .badge { position: absolute; top: -24px; right: 46px; background: var(--blue); color: #fff; font-size: 26px; font-weight: 700; padding: 10px 24px; border-radius: 999px; }
+  #chips { left: 60px; right: 60px; top: 1450px; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+  .chip { display: inline-flex; align-items: center; gap: 14px; padding: 18px 30px; border-radius: 999px; border: 2px solid var(--line); background: rgba(10,23,52,.8); font-size: 30px; font-weight: 600; }
+  .chip svg { flex: none; }
 
-  .pill { display: inline-flex; align-items: center; gap: 24px; padding: 34px 60px; border-radius: 999px; font-weight: 800; font-size: 50px; }
+  /* Scène 5 : appel à l'action */
+  #cta { left: 0; right: 0; top: 1060px; text-align: center; }
+  .btn { display: inline-flex; align-items: center; gap: 18px; padding: 38px 64px; border-radius: 26px; background: var(--blue); color: #fff; font-size: 52px; font-weight: 700; box-shadow: 0 30px 60px -24px rgba(27,140,227,.9); }
+  #url { left: 0; right: 0; top: 1290px; text-align: center; font-size: 64px; font-weight: 800; }
+  #fine { left: 0; right: 0; top: 1400px; text-align: center; font-size: 34px; color: var(--muted); font-weight: 600; }
 </style>
 </head>
 <body>
 <div id="stage">
+  <div id="halo"></div>
+  <div id="stripes"></div>
 
-  <!-- ===== Scène 1 & 5 : fond clair + logo ===== -->
-  <div class="layer" id="light">
-    <div class="abs" id="ring1" style="left:540px;top:760px;border-radius:50%;border:4px solid var(--blue);"></div>
-    <div class="abs" id="ring2" style="left:540px;top:760px;border-radius:50%;border:4px solid var(--blue);"></div>
-    <div class="abs logo-n" id="logoN"></div>
-    <div class="abs" id="logoTxtClip" style="overflow:hidden;"><div class="logo-txt" id="logoTxt"></div></div>
-    <div class="abs center-x" id="tagline" style="top:1010px;font-size:58px;font-weight:700;color:var(--ink);">Services Tech à Domicile</div>
-    <div class="abs center-x" id="tagline2" style="top:1100px;font-size:40px;font-weight:600;color:var(--blue);letter-spacing:4px;">RAPIDES • FIABLES • ABORDABLES</div>
-
-    <!-- Outro -->
-    <div class="abs center-x" id="cta1" style="top:1010px;"><span class="pill" style="background:var(--blue);color:#fff;box-shadow:0 24px 60px -16px rgba(59,130,246,.8);">Devis gratuit</span></div>
-    <div class="abs center-x" id="cta2" style="top:1220px;font-size:46px;font-weight:700;color:var(--ink);display:flex;justify-content:center;align-items:center;gap:26px;"><span id="icPin" style="color:var(--blue);display:inline-flex"></span>Montpellier et environs</div>
-    <div class="abs center-x" id="cta3" style="top:1350px;font-size:46px;font-weight:700;color:var(--ink);display:flex;justify-content:center;align-items:center;gap:26px;"><span id="icMsg" style="color:#25a55f;display:inline-flex"></span>WhatsApp : 06 67 62 32 92</div>
+  <!-- Logo (SVG exact de l'en-tête du site) : utilisé en scène 1 et 5 -->
+  <div class="abs" id="brandWrap" style="left:0;right:0;display:flex;justify-content:center;">
+    <div id="brand">
+      <svg id="mark" width="190" height="190" viewBox="0 0 34 34">
+        <rect id="markBg" width="34" height="34" rx="10" fill="#1b8ce3"/>
+        <path id="markN" d="M10 24V10l14 14V10" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="100" stroke-dasharray="100"/>
+      </svg>
+      <div class="word brand" id="word" style="overflow:hidden;white-space:nowrap;"><span id="wordIn" style="display:inline-block">novytek</span></div>
+    </div>
   </div>
 
-  <!-- ===== Scènes 2-4 : fond sombre, révélé par un cercle ===== -->
-  <div class="layer" id="dark">
-    <div class="grid-bg" id="grid"></div>
-    <div class="blob" id="blob1" style="width:700px;height:700px;background:rgba(59,130,246,.45);"></div>
-    <div class="blob" id="blob2" style="width:600px;height:600px;background:rgba(29,79,216,.5);"></div>
-
-    <!-- Scène 2 : problèmes -->
-    <div class="abs center-x q" id="q1" style="top:560px;">PC <span class="hl">lent</span> ?</div>
-    <div class="abs center-x q" id="q2" style="top:740px;">WiFi <span class="hl">capricieux</span> ?</div>
-    <div class="abs center-x q" id="q3" style="top:920px;">TV <span class="hl">à fixer</span> ?</div>
-    <div class="abs center-x" id="q4" style="top:1180px;"><span class="pill" style="background:#fff;color:var(--blue-dark);font-size:64px;">On s'en occupe.</span></div>
-
-    <!-- Scène 3 : services -->
-    <div class="abs center-x" id="svcTitle" style="top:250px;color:#fff;font-size:84px;font-weight:800;">Nos services</div>
-    <div class="abs center-x" id="svcSub" style="top:360px;color:rgba(255,255,255,.7);font-size:38px;font-weight:600;">À domicile, tarifs transparents</div>
-    <div id="cards"></div>
-
-    <!-- Scène 4 : avantages -->
-    <div class="abs center-x" id="advTitle" style="top:420px;color:#fff;font-size:84px;font-weight:800;">Pourquoi <span style="color:var(--blue-glow)">NovyTek</span> ?</div>
-    <div id="advs"></div>
+  <!-- Scène 2 -->
+  <div class="scene" id="s2">
+    <div class="abs eyebrow" id="s2eye" style="left:80px;top:470px;">Votre site web, à vous</div>
+    <h1 class="abs" id="h1"></h1>
+    <div class="abs" id="sub">À partir de <b>19 € par mois</b>, hébergement compris.</div>
   </div>
 
-  <!-- Cercle de transition vers l'outro -->
-  <div class="abs" id="wipeOut" style="border-radius:50%;background:var(--light);"></div>
+  <!-- Scène 3 -->
+  <div class="scene" id="s3">
+    <div class="abs eyebrow" id="s3eye" style="left:80px;top:110px;">Vous le composez</div>
+    <h2 class="abs" id="s3title">Section par section,<br><span style="color:var(--sky)">sans une ligne de code.</span></h2>
+    <div class="abs" id="panel"></div>
+    <div class="abs" id="phone"></div>
+    <div class="abs" id="swatches"></div>
+    <div class="abs" id="combo"><div class="big">2 592</div><span>combinaisons de départ</span></div>
+  </div>
+
+  <!-- Scène 4 -->
+  <div class="scene" id="s4">
+    <div class="abs eyebrow" id="s4eye" style="left:0;right:0;top:150px;text-align:center;">Formules</div>
+    <h2 class="abs" id="s4title">Sans frais de création.</h2>
+    <div id="plans"></div>
+    <div class="abs" id="chips"></div>
+  </div>
+
+  <!-- Scène 5 -->
+  <div class="scene" id="s5">
+    <div class="abs" id="cta"><span class="btn">Composer mon site →</span></div>
+    <div class="abs brand" id="url">novytek.fr</div>
+    <div class="abs" id="fine">Sans engagement · Hébergé en France</div>
+  </div>
+
+  <!-- Balayage de transition -->
+  <div class="abs" id="sweep" style="left:0;width:1080px;background:var(--blue);"></div>
 </div>
 
 <script>
 const W = 1080, H = 1920;
 const $ = id => document.getElementById(id);
-const icon = (name, size, sw = 2) =>
-  `<svg class="ic" width="${size}" height="${size}" viewBox="0 0 24 24" style="stroke-width:${sw}">${ICONS[name]}</svg>`;
 
-// ---------- Logo (découpes de public/logo.png) ----------
-// Marque "N" : x 100..282, y 410..590 ; texte "NOVYTEK" : x 325..925, y 455..555 (px de l'image 1024)
-const N_BOX = { x: 100, y: 410, w: 182, h: 180 };
-const T_BOX = { x: 325, y: 452, w: 600, h: 106 };
-function setCrop(el, box, scale) {
-  el.style.width = box.w * scale + "px";
-  el.style.height = box.h * scale + "px";
-  el.style.backgroundImage = `url(${LOGO})`;
-  el.style.backgroundSize = 1024 * scale + "px " + 1024 * scale + "px";
-  el.style.backgroundPosition = `${-box.x * scale}px ${-box.y * scale}px`;
-}
-const LS = 1.1; // échelle du logo
-setCrop($("logoN"), N_BOX, LS);
-setCrop($("logoTxt"), T_BOX, LS);
-const nW = N_BOX.w * LS, nH = N_BOX.h * LS, tW = T_BOX.w * LS, tH = T_BOX.h * LS, gap = 44 * LS;
-const fullW = nW + gap + tW;
-const logoLeft = (W - fullW) / 2, logoCY = 760;
+// ----- Fond : bandes -----
+const STRIPES = [[180, 0.9], [420, 0.6], [760, 1.1], [1010, 0.7], [1380, 1.0], [1650, 0.8], [1830, 0.5]];
+STRIPES.forEach(([y], i) => { const d = document.createElement("div"); d.className = "stripe"; d.id = "st" + i; d.style.top = y + "px"; d.style.width = "900px"; $("stripes").appendChild(d); });
 
-$("icPin").innerHTML = icon("map-pin", 52, 2.4);
-$("icMsg").innerHTML = icon("message-circle", 52, 2.4);
+// ----- Scène 2 : titre du site, mot à mot -----
+const WORDS = ["Le", "site", "de", "votre", "entreprise,", "que", "vous", "tenez", "vous-même."];
+$("h1").innerHTML = WORDS.map((w, i) => `<span class="w"><span id="w${i}" class="${i >= 7 ? "hl" : ""}">${w}</span></span>`).join(" ");
 
-// ---------- Cartes services (données de src/pages/Home.tsx) ----------
-const SERVICES = [
-  ["cpu", "Montage PC", "80€"],
-  ["settings", "Optimisation", "60€"],
-  ["wifi", "Installation Réseau", "70€"],
-  ["house", "Domotique", "50€"],
-  ["tv", "TV & Audio", "90€"],
-  ["gamepad-2", "Setup Gaming", "100€"],
+// ----- Scène 3 : sections (liste du site) + maquette -----
+const SECTIONS = ["Bannière", "Horaires", "Avis clients", "Galerie", "Boutique", "Carte de fidélité"];
+$("panel").innerHTML = SECTIONS.map((s, i) => `<div class="sec" id="sec${i}"><i>0${i + 1}</i>${s}</div>`).join("");
+// Blocs de la maquette : [top, height, contenu]
+const BLOCKS = [
+  [22, 300, `<div class="acc" style="position:absolute;inset:0"></div><div style="position:absolute;left:30px;top:120px;width:300px;height:28px;border-radius:8px;background:rgba(255,255,255,.95)"></div><div style="position:absolute;left:30px;top:166px;width:210px;height:28px;border-radius:8px;background:rgba(255,255,255,.95)"></div><div style="position:absolute;left:30px;top:226px;width:150px;height:46px;border-radius:12px;background:#fff"></div>`],
+  [338, 96, `<div style="position:absolute;inset:0;background:#eef2f7"></div><div class="acc" style="position:absolute;left:24px;top:30px;width:36px;height:36px;border-radius:10px"></div><div style="position:absolute;left:80px;top:28px;width:220px;height:16px;border-radius:6px;background:#9aa6b8"></div><div style="position:absolute;left:80px;top:54px;width:160px;height:14px;border-radius:6px;background:#c5cdd8"></div>`],
+  [450, 120, `<div style="position:absolute;inset:0;background:#eef2f7"></div>${[0, 1, 2].map(k => `<div style="position:absolute;left:${24 + k * 34}px;top:26px;width:26px;height:26px;border-radius:50%" class="acc"></div>`).join("")}<div style="position:absolute;left:24px;top:70px;width:380px;height:14px;border-radius:6px;background:#9aa6b8"></div><div style="position:absolute;left:24px;top:94px;width:280px;height:14px;border-radius:6px;background:#c5cdd8"></div>`],
+  [586, 150, [0, 1, 2].map(k => `<div style="position:absolute;left:${k * 150}px;top:0;width:140px;height:150px;border-radius:14px;background:${["#cfd8e3", "#b8c4d3", "#dde4ec"][k]}"></div>`).join("")],
+  [752, 96, `<div style="position:absolute;inset:0;background:#eef2f7"></div><div style="position:absolute;left:24px;top:24px;width:48px;height:48px;border-radius:12px;background:#c5cdd8"></div><div style="position:absolute;left:90px;top:30px;width:170px;height:16px;border-radius:6px;background:#9aa6b8"></div><div class="acc" style="position:absolute;right:24px;top:26px;width:110px;height:44px;border-radius:12px"></div>`],
+  [864, 60, `<div class="acc" style="position:absolute;inset:0;opacity:.18"></div>${[0, 1, 2, 3, 4, 5, 6, 7].map(k => `<div class="acc" style="position:absolute;left:${24 + k * 50}px;top:16px;width:28px;height:28px;border-radius:50%;opacity:${k < 5 ? 1 : .3}"></div>`).join("")}`],
 ];
-const cardsEl = $("cards");
-SERVICES.forEach(([ic, title, price], i) => {
-  const c = document.createElement("div");
-  c.className = "card"; c.id = "card" + i;
-  const col = i % 2, row = Math.floor(i / 2);
-  c.style.left = (60 + col * 500) + "px";
-  c.style.top = (520 + row * 380) + "px";
-  c.innerHTML = `<div class="icw">${icon(ic, 54)}</div><h3>${title}</h3><div class="pr">dès <b>${price}</b></div>`;
-  cardsEl.appendChild(c);
-});
+$("phone").innerHTML = BLOCKS.map(([top, h, html], i) => `<div class="blk" id="blk${i}" style="top:${top}px;height:${h}px">${html}</div>`).join("");
+// Couleurs des pastilles affichées sur le site (section « À votre image »)
+const SW = ["#e8651f", "#3f8a5a", "#1b8ce3", "#8e44ad", "#e0a100"];
+$("swatches").innerHTML = SW.map((c, i) => `<div class="sw" id="sw${i}" style="background:${c}"></div>`).join("");
 
-// ---------- Avantages (données de src/pages/Home.tsx) ----------
-const ADV = [
-  ["clock", "Intervention sous 48h"],
-  ["shield-check", "Garantie satisfaction"],
-  ["house", "Service à domicile"],
-  ["circle-check", "Tarifs transparents"],
+// ----- Scène 4 : formules (novytek.fr/formules) -----
+const PLANS = [
+  ["Vitrine", "Tout pour présenter votre activité et être trouvé.", "19 €", false],
+  ["Boutique", "Tout de la Vitrine, plus la vente en ligne.", "29 €", true],
+  ["Personnalisé", "Votre site conçu à la main, de A à Z.", "69 €", false],
 ];
-const advEl = $("advs");
-ADV.forEach(([ic, txt], i) => {
-  const a = document.createElement("div");
-  a.className = "adv"; a.id = "adv" + i;
-  a.style.top = (660 + i * 190) + "px";
-  a.innerHTML = `<div class="icw">${icon(ic, 50, 2.4)}</div><span>${txt}</span>`;
-  advEl.appendChild(a);
-});
+$("plans").innerHTML = PLANS.map(([n, d, p, pop], i) =>
+  `<div class="plan${pop ? " pop" : ""}" id="plan${i}" style="top:${440 + i * 300}px">${pop ? '<div class="badge">Le plus choisi</div>' : ""}<div><h2>${n}</h2><p>${d}</p></div><div class="price">${p}<small> /mois</small></div></div>`).join("");
+const check = `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#7cc6fb" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>`;
+const CHIPS = ["Certificat HTTPS", "Hébergé en France", "Sauvegardes chiffrées", "Mises à jour", "Aucun cookie publicitaire"];
+$("chips").innerHTML = CHIPS.map((c, i) => `<span class="chip" id="chip${i}">${check}${c}</span>`).join("");
 
-// ---------- Outils d'animation ----------
+// ----- Outils -----
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const p = (t, a, b) => clamp((t - a) / (b - a));
 const eOut = x => 1 - Math.pow(1 - x, 3);
@@ -167,109 +174,104 @@ const eIn = x => x * x * x;
 const eIO = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 const eBack = x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
 const lerp = (a, b, x) => a + (b - a) * x;
-function st(el, o) { if (typeof el === "string") el = $(el); Object.assign(el.style, o); }
-function show(el, v) { st(el, { display: v ? "" : "none" }); }
-
-// Entrée/sortie standard : glisse + fondu
-function inOut(el, t, a, b, c, d, { dx = 0, dy = 60, ox = 0, oy = -40, scaleIn = 1 } = {}) {
+const st = (el, o) => Object.assign((typeof el === "string" ? $(el) : el).style, o);
+function inOut(el, t, a, b, c, d, { dx = 0, dy = 50, ox = 0, oy = -40, s0 = 1 } = {}) {
   const i = eOut(p(t, a, b)), o = eIn(p(t, c, d));
-  const x = lerp(dx, 0, i) + lerp(0, ox, o), y = lerp(dy, 0, i) + lerp(0, oy, o);
-  const s = lerp(scaleIn, 1, i);
-  st(el, { opacity: i * (1 - o), transform: `translate(${x}px,${y}px) scale(${s})` });
+  st(el, { opacity: i * (1 - o), transform: `translate(${lerp(dx, 0, i) + ox * o}px,${lerp(dy, 0, i) + oy * o}px) scale(${lerp(s0, 1, i)})` });
 }
+const hex = h => [1, 3, 5].map(k => parseInt(h.slice(k, k + 2), 16));
+const mix = (a, b, x) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, k) => Math.round(lerp(v, B[k], x))).join(",")})`; };
 
-// ---------- Timeline (secondes) ----------
-// 0.0-3.0  Logo + accroche (fond clair)
-// 2.6-3.2  Cercle bleu -> scène sombre
-// 3.0-5.4  "PC lent ? / WiFi capricieux ? / TV à fixer ?" -> "On s'en occupe."
-// 5.4-10.0 Nos services (6 cartes avec tarifs)
-// 10.0-12.6 Pourquoi NovyTek ? (4 avantages)
-// 12.4-13.0 Cercle clair -> outro
-// 12.8-15.0 Logo + Devis gratuit + zone + WhatsApp
+// ----- Timeline (s) -----
+// 0.0–2.6  Logo : le « N » se trace, « novytek » se révèle
+// 2.4–5.6  Titre du site mot à mot + « À partir de 19 € par mois »
+// 5.6–9.4  Éditeur : sections qui s'empilent, la couleur change
+// 9.4–12.4 Formules 19 / 29 / 69 €/mois + inclus
+// 12.4–15  Logo + « Composer mon site → » + novytek.fr
+const SWEEPS = [2.4, 5.6, 9.4, 12.4];
+
 window.renderFrame = function (t) {
-  // ----- Couche claire : intro -----
+  // Fond
+  st("halo", { left: (W / 2 - 550 + 160 * Math.sin(t * 0.5)) + "px", top: (500 + 300 * Math.sin(t * 0.33)) + "px" });
+  STRIPES.forEach(([y, sp], i) => st("st" + i, { transform: `translateX(${((t * 260 * sp + i * 370) % 2000) - 900}px)` }));
+
+  // Balayages de transition (une bande bleue traverse l'écran de bas en haut)
+  let sw = null;
+  for (const s of SWEEPS) if (t >= s - 0.25 && t < s + 0.25) sw = p(t, s - 0.25, s + 0.25);
+  if (sw === null) st("sweep", { display: "none" });
+  else { const k = eIO(sw), top = lerp(H, -H * 0.2, k); st("sweep", { display: "", top: top + "px", height: (H * 0.2 + 260 * Math.sin(Math.PI * k)) + "px", opacity: 1 }); }
+
+  // Logo : scène 1 puis 5
   const outro = t >= 12.4;
-  const nIn = eBack(p(t, 0.15, 0.85));
-  const slide = eIO(p(t, 0.85, 1.5));
-  const reveal = eOut(p(t, 1.45, 2.1));
-  // Position du logo : intro centré (y=760), outro plus haut (y=720)
-  const cy = outro ? 720 : logoCY;
-  const oIn = outro ? eOut(p(t, 12.7, 13.3)) : 1;
-  const nStartX = (W - nW) / 2, nEndX = logoLeft;
-  const nX = outro ? nEndX : lerp(nStartX, nEndX, slide);
-  const nScale = outro ? lerp(0.4, 1, eBack(p(t, 12.7, 13.3))) : nIn;
-  const nRot = outro ? 0 : lerp(-90, 0, eOut(p(t, 0.15, 0.85)));
-  st("logoN", { left: nX + "px", top: (cy - nH / 2) + "px", opacity: outro ? oIn : clamp(nIn * 2), transform: `scale(${nScale}) rotate(${nRot}deg)` });
-  const txtX = logoLeft + nW + gap;
-  const rv = outro ? eOut(p(t, 12.9, 13.5)) : reveal;
-  st("logoTxtClip", { left: txtX + "px", top: (cy - tH / 2) + "px", width: tW * rv + "px", height: tH + "px" });
-  st("logoTxt", { transform: `translateX(${lerp(-60, 0, rv)}px)` });
-
-  // Anneaux d'onde derrière le N
-  [["ring1", 0.55], ["ring2", 0.8]].forEach(([id, s0]) => {
-    const k = p(t, s0, s0 + 1.4), r = lerp(80, 900, eOut(k));
-    st(id, { width: 2 * r + "px", height: 2 * r + "px", marginLeft: -r + "px", marginTop: -r + "px", opacity: (outro ? 0 : 0.5 * (1 - k)) * (k > 0 ? 1 : 0) });
-  });
-
-  show("tagline", !outro); show("tagline2", !outro);
-  inOut($("tagline"), t, 1.6, 2.1, 9, 10, { dy: 40 });
-  inOut($("tagline2"), t, 1.8, 2.3, 9, 10, { dy: 40 });
-
-  show("cta1", outro); show("cta2", outro); show("cta3", outro);
-  inOut($("cta1"), t, 13.3, 13.8, 99, 100, { dy: 50, scaleIn: 0.7 });
-  inOut($("cta2"), t, 13.6, 14.1, 99, 100, { dy: 40 });
-  inOut($("cta3"), t, 13.8, 14.3, 99, 100, { dy: 40 });
-  // léger "pulse" du bouton devis
-  if (t > 13.8) { const pu = 1 + 0.035 * Math.sin((t - 13.8) * 7); $("cta1").style.transform += ` scale(${pu})`; }
-
-  // ----- Couche sombre : révélée par un cercle qui s'agrandit depuis le N -----
-  const R = Math.hypot(W, H);
-  const openK = eIO(p(t, 2.6, 3.2));
-  const darkVisible = t >= 2.6 && t < 13.0;
-  show("dark", darkVisible);
-  st("dark", { clipPath: `circle(${openK * R}px at 50% ${logoCY}px)` });
-
-  // fond animé
-  st("grid", { transform: `translate(${(t * 18) % 90}px, ${(t * 30) % 90}px)` });
-  st("blob1", { left: (200 + 180 * Math.sin(t * 0.7)) + "px", top: (300 + 200 * Math.cos(t * 0.5)) + "px" });
-  st("blob2", { left: (500 + 160 * Math.cos(t * 0.6)) + "px", top: (1200 + 180 * Math.sin(t * 0.8)) + "px" });
+  const base = outro ? 12.55 : 0.1;
+  const mk = eBack(p(t, base, base + 0.6));
+  const draw = eIO(p(t, base + 0.35, base + 1.05));
+  const wr = eOut(p(t, base + 0.8, base + 1.5));
+  const logoOut = outro ? 0 : eIn(p(t, 2.1, 2.4));
+  const visible = t < 2.4 || outro;
+  st("brandWrap", { display: visible ? "flex" : "none", top: (outro ? 700 : 850) + "px", opacity: 1 - logoOut, transform: `translateY(${-80 * logoOut}px)` });
+  st("mark", { transform: `scale(${mk}) rotate(${lerp(-25, 0, eOut(p(t, base, base + 0.6)))}deg)` });
+  $("markN").setAttribute("stroke-dashoffset", String(100 * (1 - draw)));
+  const fullW = $("wordIn").offsetWidth;
+  st("word", { width: (fullW * wr) + "px", opacity: clamp(wr * 3) });
+  st("wordIn", { transform: `translateX(${lerp(-40, 0, wr)}px)` });
+  st("brand", { gap: (34 * clamp(wr * 4)) + "px" });
 
   // Scène 2
-  inOut($("q1"), t, 3.05, 3.45, 5.0, 5.35, { dx: -300, dy: 0, ox: 0, oy: -80 });
-  inOut($("q2"), t, 3.45, 3.85, 5.0, 5.35, { dx: 300, dy: 0, ox: 0, oy: -80 });
-  inOut($("q3"), t, 3.85, 4.25, 5.0, 5.35, { dx: -300, dy: 0, ox: 0, oy: -80 });
-  inOut($("q4"), t, 4.35, 4.75, 5.0, 5.35, { dy: 0, oy: -80, scaleIn: 0.4 });
-  if (t > 4.35 && t < 4.75) $("q4").style.transform = `scale(${lerp(0.4, 1, eBack(p(t, 4.35, 4.75)))})`;
+  st("s2", { display: t >= 2.4 && t < 5.7 ? "" : "none" });
+  inOut($("s2eye"), t, 2.55, 2.9, 5.2, 5.5, { dy: 30 });
+  WORDS.forEach((_, i) => {
+    const a = 2.6 + i * 0.13, k = eOut(p(t, a, a + 0.45)), o = eIn(p(t, 5.15 + i * 0.02, 5.45 + i * 0.02));
+    st("w" + i, { transform: `translateY(${lerp(110, 0, k) - 110 * o}%)` });
+  });
+  inOut($("sub"), t, 4.0, 4.5, 5.2, 5.5, { dy: 40 });
 
   // Scène 3
-  inOut($("svcTitle"), t, 5.4, 5.9, 9.6, 10.0, { dy: -60, oy: -60 });
-  inOut($("svcSub"), t, 5.55, 6.05, 9.6, 10.0, { dy: -40, oy: -60 });
-  SERVICES.forEach((_, i) => {
-    const a = 5.8 + i * 0.22, el = $("card" + i);
-    const k = p(t, a, a + 0.55), o = eIn(p(t, 9.55 + i * 0.05, 9.95 + i * 0.05));
-    const s = lerp(0.5, 1, eBack(k));
-    const dir = i % 2 ? 1 : -1;
-    st(el, { opacity: clamp(k * 2) * (1 - o), transform: `translate(${dir * 700 * o}px, ${lerp(80, 0, eOut(k))}px) scale(${s})` });
-    // Illumination de la carte en séquence (met en avant chaque service)
-    const hl = Math.max(0, 1 - Math.abs(t - (7.4 + i * 0.35)) / 0.35);
-    el.style.background = `rgba(59,130,246,${0.07 + 0.35 * hl})`;
-    el.style.borderColor = `rgba(96,165,250,${0.35 + 0.65 * hl})`;
+  st("s3", { display: t >= 5.6 && t < 9.5 ? "" : "none" });
+  inOut($("s3eye"), t, 5.7, 6.05, 9.0, 9.3, { dy: 30 });
+  inOut($("s3title"), t, 5.75, 6.2, 9.0, 9.3, { dy: 50 });
+  inOut($("phone"), t, 5.9, 6.5, 9.0, 9.35, { dy: 200, oy: 120 });
+  SECTIONS.forEach((_, i) => {
+    const a = 6.3 + i * 0.3;
+    inOut($("sec" + i), t, a - 0.15, a + 0.2, 9.0 + i * 0.02, 9.3, { dx: -60, dy: 0, oy: 0, ox: -60 });
+    const act = t >= a && t < a + 0.3;
+    st("sec" + i, { background: act ? "rgba(27,140,227,.22)" : "transparent", borderColor: act ? "#1b8ce3" : "transparent", color: t >= a ? "#eef4fb" : "#9fb3cc" });
+    const bk = p(t, a, a + 0.4);
+    st("blk" + i, { opacity: clamp(bk * 2), transform: `translateX(${lerp(380, 0, eBack(bk))}px)` });
   });
+  // Changement de couleur d'accent : bleu -> orange -> vert -> violet -> bleu
+  const seq = [[8.0, 0], [8.35, 1], [8.7, 3], [9.05, 2]];
+  let acc = "#1b8ce3", selIdx = -1;
+  for (let k = 0; k < seq.length; k++) {
+    const [tk, idx] = seq[k];
+    if (t >= tk) { const prev = k ? SW[seq[k - 1][1]] : "#1b8ce3"; acc = mix(prev, SW[idx], eOut(p(t, tk, tk + 0.2))); selIdx = idx; }
+  }
+  document.querySelectorAll("#phone .acc").forEach(e => e.style.background = acc);
+  SW.forEach((_, i) => {
+    inOut($("sw" + i), t, 7.7 + i * 0.06, 8.0 + i * 0.06, 9.0, 9.3, { dy: 30, s0: 0.5 });
+    st("sw" + i, { borderColor: i === selIdx ? "#fff" : "transparent" });
+  });
+  inOut($("combo"), t, 7.8, 8.2, 9.0, 9.3, { dy: 40 });
 
   // Scène 4
-  inOut($("advTitle"), t, 10.0, 10.5, 12.2, 12.5, { dy: -60, oy: -60 });
-  ADV.forEach((_, i) => {
-    const a = 10.3 + i * 0.3;
-    inOut($("adv" + i), t, a, a + 0.5, 12.15, 12.45, { dx: -1000, dy: 0, ox: 1000, oy: 0 });
+  st("s4", { display: t >= 9.4 && t < 12.5 ? "" : "none" });
+  inOut($("s4eye"), t, 9.5, 9.85, 12.0, 12.3, { dy: 30 });
+  inOut($("s4title"), t, 9.55, 10.0, 12.0, 12.3, { dy: 50 });
+  PLANS.forEach((_, i) => {
+    const a = 9.85 + i * 0.22;
+    inOut($("plan" + i), t, a, a + 0.5, 12.0 + i * 0.03, 12.3, { dx: i % 2 ? 900 : -900, dy: 0, oy: 0, ox: 0 });
   });
+  const pop = $("plan1");
+  if (t > 10.6 && t < 12.0) pop.style.transform += ` scale(${1 + 0.03 * Math.sin((t - 10.6) * 6)})`;
+  CHIPS.forEach((_, i) => inOut($("chip" + i), t, 10.8 + i * 0.12, 11.2 + i * 0.12, 12.0, 12.3, { dy: 30, s0: 0.8 }));
 
-  // ----- Transition vers l'outro -----
-  const wk = eIO(p(t, 12.4, 13.0));
-  show("wipeOut", t >= 12.4 && t < 13.0);
-  const r2 = wk * R;
-  st("wipeOut", { left: (W / 2 - r2) + "px", top: (H / 2 - r2) + "px", width: 2 * r2 + "px", height: 2 * r2 + "px" });
+  // Scène 5
+  st("s5", { display: outro ? "" : "none" });
+  inOut($("cta"), t, 13.3, 13.8, 99, 100, { dy: 60, s0: 0.8 });
+  if (t > 13.8) $("cta").style.transform += ` scale(${1 + 0.025 * Math.sin((t - 13.8) * 6)})`;
+  inOut($("url"), t, 13.55, 14.0, 99, 100, { dy: 40 });
+  inOut($("fine"), t, 13.7, 14.15, 99, 100, { dy: 30 });
 };
-
 window.renderFrame(0);
 </script>
 </body>
