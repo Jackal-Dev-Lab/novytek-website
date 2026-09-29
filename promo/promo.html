@@ -184,11 +184,11 @@ const mix = (a, b, x) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v,
 
 // ----- Timeline (s) -----
 // 0.0–2.6  Logo : le « N » se trace, « novytek » se révèle
-// 2.4–5.6  Titre du site mot à mot + « À partir de 19 € par mois »
-// 5.6–9.4  Éditeur : sections qui s'empilent, la couleur change
+// 2.4–6.0  Titre du site mot à mot + « À partir de 19 € par mois »
+// 6.0–9.4  Éditeur : sections qui s'empilent, la couleur change
 // 9.4–12.4 Formules 19 / 29 / 69 €/mois + inclus
 // 12.4–15  Logo + « Composer mon site → » + novytek.fr
-const SWEEPS = [2.4, 5.6, 9.4, 12.4];
+const SWEEPS = [2.4, 6.0, 9.4, 12.4];
 
 window.renderFrame = function (t) {
   // Fond
@@ -218,21 +218,21 @@ window.renderFrame = function (t) {
   st("brand", { gap: (34 * clamp(wr * 4)) + "px" });
 
   // Scène 2
-  st("s2", { display: t >= 2.4 && t < 5.7 ? "" : "none" });
-  inOut($("s2eye"), t, 2.55, 2.9, 5.2, 5.5, { dy: 30 });
+  st("s2", { display: t >= 2.4 && t < 6.1 ? "" : "none" });
+  inOut($("s2eye"), t, 2.55, 2.9, 5.65, 5.95, { dy: 30 });
   WORDS.forEach((_, i) => {
-    const a = 2.6 + i * 0.13, k = eOut(p(t, a, a + 0.45)), o = eIn(p(t, 5.15 + i * 0.02, 5.45 + i * 0.02));
+    const a = 2.6 + i * 0.13, k = eOut(p(t, a, a + 0.45)), o = eIn(p(t, 5.6 + i * 0.02, 5.9 + i * 0.02));
     st("w" + i, { transform: `translateY(${lerp(110, 0, k) - 110 * o}%)` });
   });
-  inOut($("sub"), t, 4.0, 4.5, 5.2, 5.5, { dy: 40 });
+  inOut($("sub"), t, 4.0, 4.5, 5.65, 5.95, { dy: 40 });
 
   // Scène 3
-  st("s3", { display: t >= 5.6 && t < 9.5 ? "" : "none" });
-  inOut($("s3eye"), t, 5.7, 6.05, 9.0, 9.3, { dy: 30 });
-  inOut($("s3title"), t, 5.75, 6.2, 9.0, 9.3, { dy: 50 });
-  inOut($("phone"), t, 5.9, 6.5, 9.0, 9.35, { dy: 200, oy: 120 });
+  st("s3", { display: t >= 6.0 && t < 9.5 ? "" : "none" });
+  inOut($("s3eye"), t, 6.1, 6.45, 9.0, 9.3, { dy: 30 });
+  inOut($("s3title"), t, 6.15, 6.6, 9.0, 9.3, { dy: 50 });
+  inOut($("phone"), t, 6.3, 6.9, 9.0, 9.35, { dy: 200, oy: 120 });
   SECTIONS.forEach((_, i) => {
-    const a = 6.3 + i * 0.3;
+    const a = 6.6 + i * 0.27;
     inOut($("sec" + i), t, a - 0.15, a + 0.2, 9.0 + i * 0.02, 9.3, { dx: -60, dy: 0, oy: 0, ox: -60 });
     const act = t >= a && t < a + 0.3;
     st("sec" + i, { background: act ? "rgba(27,140,227,.22)" : "transparent", borderColor: act ? "#1b8ce3" : "transparent", color: t >= a ? "#eef4fb" : "#9fb3cc" });
@@ -240,7 +240,7 @@ window.renderFrame = function (t) {
     st("blk" + i, { opacity: clamp(bk * 2), transform: `translateX(${lerp(380, 0, eBack(bk))}px)` });
   });
   // Changement de couleur d'accent : bleu -> orange -> vert -> violet -> bleu
-  const seq = [[8.0, 0], [8.35, 1], [8.7, 3], [9.05, 2]];
+  const seq = [[8.3, 0], [8.6, 1], [8.9, 3]];
   let acc = "#1b8ce3", selIdx = -1;
   for (let k = 0; k < seq.length; k++) {
     const [tk, idx] = seq[k];
@@ -248,10 +248,10 @@ window.renderFrame = function (t) {
   }
   document.querySelectorAll("#phone .acc").forEach(e => e.style.background = acc);
   SW.forEach((_, i) => {
-    inOut($("sw" + i), t, 7.7 + i * 0.06, 8.0 + i * 0.06, 9.0, 9.3, { dy: 30, s0: 0.5 });
+    inOut($("sw" + i), t, 8.0 + i * 0.06, 8.3 + i * 0.06, 9.0, 9.3, { dy: 30, s0: 0.5 });
     st("sw" + i, { borderColor: i === selIdx ? "#fff" : "transparent" });
   });
-  inOut($("combo"), t, 7.8, 8.2, 9.0, 9.3, { dy: 40 });
+  inOut($("combo"), t, 8.05, 8.45, 9.0, 9.3, { dy: 40 });
 
   // Scène 4
   st("s4", { display: t >= 9.4 && t < 12.5 ? "" : "none" });
